@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   webpack: (config, { dev }) => {
     config.module.rules.push({
       test: /\.(glsl|vs|fs|vert|frag)$/,
-      type: "asset/source",
+      use: [require.resolve("./scripts/glsl-include-loader.cjs")],
     });
 
     if (dev) {

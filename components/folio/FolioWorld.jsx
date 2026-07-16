@@ -26,6 +26,8 @@ export function FolioWorld({ posts }) {
   const appRef = useRef(null);
   const [webglReady] = useState(() => hasWebGL());
   const [isBooting, setIsBooting] = useState(true);
+  const [loadError, setLoadError] = useState(null);
+  const [retryKey, setRetryKey] = useState(0);
   const [quality, setQuality] = useState(() => {
     if (typeof navigator !== "undefined" && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       return "low";
@@ -53,17 +55,27 @@ export function FolioWorld({ posts }) {
     });
 
     appRef.current = app;
+    window.__BZMX_FOLIO_APP = app;
     window.__BZMX_FOLIO_PAUSED = false;
 
-    const readyTimer = window.setTimeout(() => setIsBooting(false), 900);
+    app.resources.on("ready.react", () => {
+      setIsBooting(false);
+    });
+
+    app.resources.on("fatal.react", (failure) => {
+      setIsBooting(false);
+      setLoadError(failure);
+    });
 
     return () => {
-      window.clearTimeout(readyTimer);
       window.__BZMX_FOLIO_PAUSED = false;
+      if (window.__BZMX_FOLIO_APP === app) {
+        delete window.__BZMX_FOLIO_APP;
+      }
       app.destructor?.();
       appRef.current = null;
     };
-  }, [openPanel, quality, webglReady]);
+  }, [openPanel, quality, retryKey, webglReady]);
 
   useEffect(() => {
     window.__BZMX_FOLIO_PAUSED = isPanelOpen;
@@ -114,6 +126,39 @@ export function FolioWorld({ posts }) {
 
       {isBooting ? <LoadingScreen progress={68} /> : null}
 
+      {loadError ? (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-stone-950/78 p-4 text-amber-50">
+          <section className="max-w-lg rounded-md border border-red-300/40 bg-stone-950 p-5 shadow-xl">
+            <p className="text-xs font-semibold uppercase tracking-wide text-red-200">核心 3D 资源加载失败</p>
+            <h2 className="mt-2 text-xl font-semibold">无法启动完整 3D 世界</h2>
+            <dl className="mt-4 space-y-2 text-sm text-amber-50/86">
+              <div>
+                <dt className="font-semibold text-amber-100">资源</dt>
+                <dd className="break-all">{loadError.name}</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-amber-100">路径</dt>
+                <dd className="break-all">{loadError.source}</dd>
+              </div>
+              <div>
+                <dt className="font-semibold text-amber-100">状态</dt>
+                <dd>{loadError.status}</dd>
+              </div>
+            </dl>
+            <button
+              className="mt-5 rounded bg-amber-100 px-4 py-2 text-sm font-semibold text-stone-950"
+              onClick={() => {
+                setIsBooting(true);
+                setLoadError(null);
+                setRetryKey((value) => value + 1);
+              }}
+            >
+              重试加载
+            </button>
+          </section>
+        </div>
+      ) : null}
+
       <div className="pointer-events-none fixed inset-x-0 top-0 z-30 flex items-start justify-between gap-3 p-3 md:p-5">
         <section className="pointer-events-auto max-w-xl rounded-md border border-amber-100/25 bg-stone-950/62 p-3 shadow-lg backdrop-blur md:p-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-amber-200">BZMXS WORLD</p>
@@ -146,7 +191,11 @@ export function FolioWorld({ posts }) {
             aria-label="画质"
             className="h-10 rounded bg-white/10 px-2 text-xs text-amber-50"
             value={quality}
-            onChange={(event) => setQuality(event.target.value)}
+            onChange={(event) => {
+              setIsBooting(true);
+              setLoadError(null);
+              setQuality(event.target.value);
+            }}
           >
             <option value="low">Low</option>
             <option value="medium">Medium</option>
