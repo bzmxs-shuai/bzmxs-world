@@ -6,6 +6,6 @@ export default defineConfig([
   ...nextVitals,
   ...nextTypescript,
   {
-    ignores: [".next/**", "node_modules/**", "work/**", "outputs/**"],
+    ignores: [".next/**", "node_modules/**", "work/**", "outputs/**", "lib/folio-runtime/**", "public/folio/**"],
   },
 ]);

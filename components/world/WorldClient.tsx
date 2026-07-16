@@ -4,11 +4,11 @@ import dynamic from "next/dynamic";
 import type { Post } from "@/lib/posts";
 import { LoadingScreen } from "@/components/interface/LoadingScreen";
 
-const WorldScene = dynamic(() => import("@/components/world/WorldScene").then((mod) => mod.WorldScene), {
+const FolioWorld = dynamic(() => import("@/components/folio/FolioWorld").then((mod) => mod.FolioWorld), {
   ssr: false,
   loading: () => <LoadingScreen progress={42} />,
 });
 
 export function WorldClient({ posts }: { posts: Post[] }) {
-  return <WorldScene posts={posts} />;
+  return <FolioWorld posts={posts} />;
 }
