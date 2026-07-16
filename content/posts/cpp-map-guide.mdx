@@ -1,0 +1,40 @@
+---
+title: "C++ map 使用方法"
+slug: "cpp-map-guide"
+date: "2026-07-17"
+description: "介绍 C++ STL map 的基本使用方法。"
+area: "library"
+category: "C++与数据结构"
+tags:
+  - C++
+  - STL
+  - map
+legacyUrl: ""
+draft: false
+---
+
+`map` 是 C++ STL 中常用的关联容器，用来保存键值对。它会按照 key 自动排序，适合需要快速查找、统计和维护有序关系的场景。
+
+## 常见操作
+
+```cpp
+#include <map>
+#include <string>
+using namespace std;
+
+map<string, int> score;
+score["Alice"] = 95;
+score["Bob"] += 1;
+```
+
+使用 `find` 可以避免访问不存在的 key 时自动插入：
+
+```cpp
+if (score.find("Alice") != score.end()) {
+  // 找到了
+}
+```
+
+## 学习提醒
+
+如果只需要哈希查找，可以比较 `unordered_map`。如果题目需要按 key 顺序遍历，`map` 更合适。

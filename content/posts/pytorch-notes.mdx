@@ -1,0 +1,32 @@
+---
+title: "PyTorch 基础学习记录"
+slug: "pytorch-basic-notes"
+date: "2026-07-17"
+description: "记录张量、自动求导和训练循环的基础概念。"
+area: "library"
+category: "人工智能"
+tags:
+  - PyTorch
+  - 人工智能
+  - 学习笔记
+legacyUrl: ""
+draft: false
+---
+
+PyTorch 的核心是张量计算和自动求导。把数据组织成 Tensor 后，就可以在 CPU 或 GPU 上完成矩阵运算。
+
+## 最小训练循环
+
+训练通常由四步组成：前向计算、损失计算、反向传播、参数更新。
+
+```python
+optimizer.zero_grad()
+pred = model(x)
+loss = loss_fn(pred, y)
+loss.backward()
+optimizer.step()
+```
+
+## 我的理解
+
+刚开始学习时，不必急着堆复杂模型。先把数据形状、损失函数和梯度流向看清楚，后面调模型会轻松很多。

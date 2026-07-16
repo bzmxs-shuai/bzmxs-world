@@ -1,0 +1,36 @@
+---
+title: "滑动窗口算法练习"
+slug: "sliding-window-practice"
+date: "2026-07-17"
+description: "用双指针维护连续区间，是很多数组和字符串题的基础技巧。"
+area: "training-ground"
+category: "算法知识"
+tags:
+  - 算法
+  - 双指针
+  - 队列
+difficulty: "普及/提高-"
+legacyUrl: ""
+draft: false
+---
+
+滑动窗口适合处理连续子数组或子串问题。窗口的左右边界逐步移动，避免重复枚举每一个区间。
+
+## 思路模板
+
+1. 右指针扩展窗口。
+2. 当窗口不满足条件时，移动左指针。
+3. 在每一步更新答案。
+
+```cpp
+for (int r = 0; r < n; r++) {
+  add(a[r]);
+  while (!valid()) {
+    remove(a[l]);
+    l++;
+  }
+  updateAnswer();
+}
+```
+
+练习时可以从最长不重复子串、最小覆盖区间、固定长度最大和这些题目开始。

@@ -1,0 +1,38 @@
+---
+title: "洛谷 P5015 标题统计题解"
+slug: "luogu-p5015-title-statistics"
+date: "2026-07-17"
+description: "一道适合练习字符串遍历和空格处理的入门题。"
+area: "training-ground"
+category: "算法题解"
+tags:
+  - 洛谷
+  - 字符串
+  - 入门
+problemId: "P5015"
+difficulty: "入门"
+legacyUrl: ""
+draft: false
+---
+
+这道题要求统计标题中非空格字符的数量。重点是保留输入中的空格，所以读取时要使用整行输入。
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+  string s;
+  getline(cin, s);
+  int ans = 0;
+  for (char c : s) {
+    if (c != ' ') ans++;
+  }
+  cout << ans << endl;
+}
+```
+
+## 易错点
+
+不要使用 `cin >> s`，它会在第一个空格处停止读取。
