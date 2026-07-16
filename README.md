@@ -9,8 +9,8 @@ Screenshot placeholder: add a desktop capture of the central island after the vi
 ## Features
 
 - Low-poly 3D island with a central plaza, Library, Training Ground, and Home areas.
-- Temporary small car character with WASD and arrow-key movement.
-- Smooth third-person follow camera.
+- Game-like small vehicle with acceleration, inertia, braking, boost, and respawn.
+- Smooth third-person follow camera with speed-based pullback and turn lag.
 - Basic ground and building collisions with React Three Rapier.
 - Building proximity detection with keyboard and click interaction prompts.
 - Two-dimensional article panel for area-specific content.
@@ -18,6 +18,8 @@ Screenshot placeholder: add a desktop capture of the central island after the vi
 - MDX-based posts with area, category, and tag metadata.
 - Static article detail pages that can be refreshed directly.
 - Basic mobile virtual direction controls.
+- Low / Medium / High quality selector for the 3D world.
+- Optional low-volume browser-generated vehicle audio with a mute toggle.
 - Loading screen, WebGL fallback, and app-level error boundary.
 
 ## Tech Stack
@@ -60,9 +62,14 @@ npm run build
 
 ## Controls
 
-- `W` / `A` / `S` / `D`: move the vehicle.
-- Arrow keys: move the vehicle.
-- `E`: open the nearby building content panel.
+- `W` / `A` / `S` / `D`: drive the vehicle.
+- Arrow keys: drive the vehicle.
+- `Shift`: short boost.
+- `Space`: small bounce.
+- `R`: respawn at a safe point.
+- `M`: open or close the map.
+- `E` or `Enter`: open the nearby building content panel.
+- `Escape`: close the article panel.
 - Click the interaction prompt: open the nearby building content panel.
 - Mobile: use the virtual direction buttons in the lower-left corner.
 
@@ -82,7 +89,17 @@ public/              Static assets
 
 ## Current Status
 
-This is a reliable MVP for the first phase. It focuses on a maintainable 3D exploration shell, a working MDX content system, and a separate normal reading mode. The current 3D models are intentionally built from simple geometry and do not use large external assets.
+This is a reliable 3D blog MVP with a scene-quality remaster pass. It focuses on a maintainable 3D exploration shell, a working MDX content system, a separate normal reading mode, and a warmer low-poly driving feel built from simple geometry rather than large external assets.
+
+## Credits
+
+The scene-quality remaster studied Bruno Simon's public Folio 2019 project for general low-poly portfolio design language, vehicle feel, camera easing, interaction-zone presentation, and sound/quality organization.
+
+- Reference site: https://bruno-simon.com/
+- Reference source: https://github.com/brunosimon/folio-2019
+- License: MIT License
+
+No Bruno Simon map, models, textures, audio files, personal content, brand text, or server code are included in this repository. See [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
 
 ## Roadmap
 
