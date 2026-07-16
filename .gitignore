@@ -18,6 +18,7 @@ pnpm-debug.log*
 .cache/
 .turbo/
 .vercel/
+.vercel
 .eslintcache
 
 # editor and system files
