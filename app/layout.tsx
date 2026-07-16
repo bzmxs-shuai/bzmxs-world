@@ -5,6 +5,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "bzmxs.cn 3D Blog",
   description: "一个低多边形 3D 小世界个人博客 MVP。",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export const viewport: Viewport = {
