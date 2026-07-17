@@ -19,7 +19,28 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="zh-CN">
-      <body>{children}</body>
+      <body>
+        <script
+          id="mutation-observer-target-guard"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (() => {
+                const nativeObserve = window.MutationObserver?.prototype?.observe;
+                if (!nativeObserve || window.__bzmxsMutationObserverGuard) return;
+                window.__bzmxsMutationObserverGuard = true;
+                window.MutationObserver.prototype.observe = function(target, options) {
+                  if (!(target instanceof Node)) {
+                    console.warn('[bzmxs] MutationObserver.observe ignored a non-Node target.', target);
+                    return;
+                  }
+                  return nativeObserve.call(this, target, options);
+                };
+              })();
+            `,
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

@@ -39,8 +39,27 @@
     <link rel="preload" href="./behindTheScene/stars.ktx" as="fetch" crossorigin>
     <link rel="preload" href="./intro/sound.ktx" as="fetch" crossorigin>
     <link rel="preload" href="./palette.ktx" as="fetch" crossorigin>
+
+    <script>
+        (() => {
+            const nativeObserve = window.MutationObserver?.prototype?.observe
+
+            if(!nativeObserve || window.__bzmxsMutationObserverGuard)
+                return
+
+            window.__bzmxsMutationObserverGuard = true
+            window.MutationObserver.prototype.observe = function(target, options) {
+                if(!(target instanceof Node)) {
+                    console.warn('[bzmxs folio runtime] MutationObserver.observe ignored a non-Node target.', target)
+                    return
+                }
+
+                return nativeObserve.call(this, target, options)
+            }
+        })()
+    </script>
     
-  <script type="module" crossorigin src="./assets/index-DbX2v682.js"></script>
+  <script type="module" crossorigin src="./assets/index-0TBKZ-pq.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-Di03QkGT.css">
 </head>
 <body>

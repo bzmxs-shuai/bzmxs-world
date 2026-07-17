@@ -1,6 +1,6 @@
 # bzmxs-world
 
-A warm low-poly 3D personal blog with an explorable driving world, built with Next.js and based on Bruno Simon's open-source `folio-2019` runtime.
+A warm low-poly 3D personal blog with an explorable driving world, built with Next.js and based on Bruno Simon's open-source `folio-2025` runtime.
 
 ## Screenshot
 
@@ -8,7 +8,7 @@ Screenshot placeholder: add a desktop capture from the Vercel Preview after visu
 
 ## Features
 
-- 3D exploration mode based on the `folio-2019` Three.js driving runtime.
+- 3D exploration mode based on the `folio-2025` Three.js driving runtime.
 - Original car physics, third-person camera, collisions, pushable objects, loading flow, mobile controls, and sound framework retained from the open-source base.
 - Blog-specific central spawn, Library, Training Ground, and Home content entry points.
 - `E` / `Enter` / mouse click area interactions that open a 2D article panel.
@@ -31,7 +31,7 @@ Screenshot placeholder: add a desktop capture from the Vercel Preview after visu
 - ESLint
 - Prettier
 
-The previous MVP dependencies for React Three Fiber, Drei, and React Three Rapier are still present while the rebuild branch is being evaluated, but the active `/explore` runtime now uses the original Three.js architecture from `folio-2019`.
+The previous MVP dependencies for React Three Fiber, Drei, and React Three Rapier are still present while the rebuild branch is being evaluated, but the active `/explore` runtime now uses the original Three.js architecture from `folio-2025`.
 
 ## Installation
 
@@ -71,15 +71,15 @@ npm run build
 
 ```text
 app/                  Next.js routes, layout, error and not-found pages
-components/folio/     Next.js bridge for the folio-2019 runtime
+components/folio/     Next.js bridge for the folio-2025 runtime
 components/interface/ 2D article panel, loading UI, navigation helpers
 components/blog/      Article cards, article list, and MDX content wrapper
 content/posts/        MDX sample posts
-lib/folio-runtime/    Modified folio-2019 Three.js runtime
-lib/shaders/          folio-2019 GLSL shaders used by the runtime
-lib/images/           folio-2019 mobile control UI images
+lib/folio-runtime/    Previous folio-2019 runtime kept for comparison during review
+lib/shaders/          Previous folio-2019 GLSL shaders kept for comparison during review
+lib/images/           Previous folio-2019 mobile control UI images kept for comparison during review
 lib/                  Post loading and MDX rendering helpers
-public/folio/         folio-2019 models, sounds, and Draco decoder assets used by the runtime
+public/folio-2025/    Active optimized folio-2025 static runtime assets
 store/                Zustand world state
 docs/                 Reference comparison notes
 ```
@@ -97,8 +97,8 @@ This branch is a folio-base rebuild preview. The stable public version remains o
 
 ## Credits
 
-Built upon the open-source `folio-2019` project by Bruno Simon. The original project is licensed under the MIT License. Modifications include the bzmxs.cn blog content system, redesigned content areas, Chinese interface, and personal branding.
+Built upon the open-source `folio-2025` project by Bruno Simon. The original project is licensed under the MIT License. Modifications include the bzmxs.cn blog content system, optimized static runtime assets, Chinese-facing shell UI, content-area bridge, and personal branding.
 
-The active 3D runtime is now built from the official newer portfolio source [brunosimon/folio-2025](https://github.com/brunosimon/folio-2025), linked from bruno-simon.com → Behind the scene → Source code. The audited repository is MIT licensed and includes Blender/source assets; see [LICENSE.folio-2025.md](./LICENSE.folio-2025.md), [docs/new-portfolio-source-audit.md](./docs/new-portfolio-source-audit.md), and [docs/folio-2025-integration-decision.md](./docs/folio-2025-integration-decision.md).
+The active 3D runtime is built from the official newer portfolio source [brunosimon/folio-2025](https://github.com/brunosimon/folio-2025), linked from bruno-simon.com → Behind the scene → Source code. The audited repository is MIT licensed and includes Blender/source assets; see [LICENSE.folio-2025.md](./LICENSE.folio-2025.md), [docs/new-portfolio-source-audit.md](./docs/new-portfolio-source-audit.md), and [docs/folio-2025-integration-decision.md](./docs/folio-2025-integration-decision.md).
 
 See [LICENSE.folio-2019.md](./LICENSE.folio-2019.md), [LICENSE.folio-2025.md](./LICENSE.folio-2025.md), and [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) for license and attribution details.
