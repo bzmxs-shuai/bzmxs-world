@@ -16,7 +16,7 @@ Important notes:
 - The public README states that server code is not shared, while the portfolio works without it.
 - Music files under `static/sounds/musics/` include a CC0 1.0 Universal license file.
 - Any adoption into this project must remove or replace Bruno Simon personal identity, original customer/project content, Three.js Journey promotions, private server/ranking/whisper behavior, analytics, and unverified third-party content.
-- This notice records the official source audit. It does not imply every `folio-2025` asset has already been integrated into the active runtime.
+- The active `/explore` runtime uses a patched static build of the public `folio-2025` frontend under `public/folio-2025`. Modifications remove public-facing personal branding, analytics, private server messaging, project/social data, and add a bzmxs.cn blog bridge.
 
 ## Bruno Simon folio-2019
 

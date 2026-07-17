@@ -1,7 +1,7 @@
 import { getAllPosts } from "@/lib/posts";
-import { WorldClient } from "@/components/world/WorldClient";
+import { FolioExploreClient } from "@/components/folio/FolioExploreClient";
 
 export default function HomePage() {
   const posts = getAllPosts();
-  return <WorldClient posts={posts} />;
+  return <FolioExploreClient posts={posts} />;
 }

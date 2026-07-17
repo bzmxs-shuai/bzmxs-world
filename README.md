@@ -99,6 +99,6 @@ This branch is a folio-base rebuild preview. The stable public version remains o
 
 Built upon the open-source `folio-2019` project by Bruno Simon. The original project is licensed under the MIT License. Modifications include the bzmxs.cn blog content system, redesigned content areas, Chinese interface, and personal branding.
 
-The official newer portfolio source has also been audited at [brunosimon/folio-2025](https://github.com/brunosimon/folio-2025), linked from bruno-simon.com → Behind the scene → Source code. The audited repository is MIT licensed and includes Blender/source assets; see [LICENSE.folio-2025.md](./LICENSE.folio-2025.md) and [docs/new-portfolio-source-audit.md](./docs/new-portfolio-source-audit.md).
+The active 3D runtime is now built from the official newer portfolio source [brunosimon/folio-2025](https://github.com/brunosimon/folio-2025), linked from bruno-simon.com → Behind the scene → Source code. The audited repository is MIT licensed and includes Blender/source assets; see [LICENSE.folio-2025.md](./LICENSE.folio-2025.md), [docs/new-portfolio-source-audit.md](./docs/new-portfolio-source-audit.md), and [docs/folio-2025-integration-decision.md](./docs/folio-2025-integration-decision.md).
 
 See [LICENSE.folio-2019.md](./LICENSE.folio-2019.md), [LICENSE.folio-2025.md](./LICENSE.folio-2025.md), and [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) for license and attribution details.

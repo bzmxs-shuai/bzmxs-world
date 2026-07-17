@@ -3,8 +3,6 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 
 export default defineConfig([
-  ...nextVitals,
-  ...nextTypescript,
   {
     ignores: [
       ".next/**",
@@ -13,7 +11,10 @@ export default defineConfig([
       "outputs/**",
       "lib/folio-runtime/**",
       "public/folio/**",
+      "public/folio-2025/**",
       "scripts/**",
     ],
   },
+  ...nextVitals,
+  ...nextTypescript,
 ]);

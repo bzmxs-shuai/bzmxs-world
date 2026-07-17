@@ -6,7 +6,7 @@
     "dev": "WATCHPACK_POLLING=true next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "eslint app components lib store proxy.ts",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "tsc --noEmit --pretty false",
     "db:generate": "prisma generate",
