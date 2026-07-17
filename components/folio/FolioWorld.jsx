@@ -6,7 +6,6 @@ import { BookOpen, Gauge, Home, Map, RotateCcw, Volume2, VolumeX } from "lucide-
 import { Howler } from "howler";
 import Application from "@/lib/folio-runtime/Application.js";
 import { ArticlePanel } from "@/components/interface/ArticlePanel";
-import { LoadingScreen } from "@/components/interface/LoadingScreen";
 import { WebGLFallback } from "@/components/fallback/WebGLFallback";
 import { useWorldStore } from "@/store/useWorldStore";
 
@@ -25,7 +24,7 @@ export function FolioWorld({ posts }) {
   const canvasRef = useRef(null);
   const appRef = useRef(null);
   const [webglReady] = useState(() => hasWebGL());
-  const [isBooting, setIsBooting] = useState(true);
+  const [, setIsBooting] = useState(true);
   const [loadError, setLoadError] = useState(null);
   const [retryKey, setRetryKey] = useState(0);
   const [quality, setQuality] = useState(() => {
@@ -67,7 +66,14 @@ export function FolioWorld({ posts }) {
       setLoadError(failure);
     });
 
+    const readyFallbackTimer = window.setTimeout(() => {
+      if (!app.resources.fatalFailure && app.resources.loader.loaded === app.resources.loader.toLoad) {
+        setIsBooting(false);
+      }
+    }, 1200);
+
     return () => {
+      window.clearTimeout(readyFallbackTimer);
       window.__BZMX_FOLIO_PAUSED = false;
       if (window.__BZMX_FOLIO_APP === app) {
         delete window.__BZMX_FOLIO_APP;
@@ -123,8 +129,6 @@ export function FolioWorld({ posts }) {
   return (
     <main className="relative h-screen overflow-hidden bg-black text-amber-50">
       <canvas ref={canvasRef} className="h-full w-full touch-none outline-none" />
-
-      {isBooting ? <LoadingScreen progress={68} /> : null}
 
       {loadError ? (
         <div className="fixed inset-0 z-50 grid place-items-center bg-stone-950/78 p-4 text-amber-50">
