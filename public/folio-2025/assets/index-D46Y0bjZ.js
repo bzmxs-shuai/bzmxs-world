@@ -79783,7 +79783,7 @@ https://github.com/browserify/crypto-browserify`);
     CameraControls.install({
         THREE: THREE$1
     });
-    const rng$5 = new seedrandomExports.alea("speedLines");
+    const rng$4 = new seedrandomExports.alea("speedLines");
     class View {
         static MODE_DEFAULT = 1;
         static MODE_FREE = 2;
@@ -80036,11 +80036,11 @@ https://github.com/browserify/crypto-browserify`);
             this.speedLines = {}, this.speedLines.strength = 0, this.speedLines.smoothedStrength = uniform$1(this.speedLines.strength), this.speedLines.worldTarget = new Vector3$1, this.speedLines.clipSpaceTarget = uniform$1(new Vector3$1), this.speedLines.speed = uniform$1(12);
             const e = 30, r = new Float32Array(e * 3 * 3), s = new Float32Array(e * 3), o = new Float32Array(e * 3), a = new Float32Array(e * 3), c = Math.hypot(1, 1);
             for(let h = 0; h < e; h++){
-                const d = h * 9, p = h * 3, f = new Vector2$1(0, 1), m = Math.PI * 2 * rng$5();
+                const d = h * 9, p = h * 3, f = new Vector2$1(0, 1), m = Math.PI * 2 * rng$4();
                 f.rotateAround(new Vector2$1, m);
-                const b = rng$5() * .01 + .002, v = f.clone().rotateAround(new Vector2$1, b), _ = f.clone().rotateAround(new Vector2$1, -b);
+                const b = rng$4() * .01 + .002, v = f.clone().rotateAround(new Vector2$1, b), _ = f.clone().rotateAround(new Vector2$1, -b);
                 f.multiplyScalar(c), v.multiplyScalar(c), _.multiplyScalar(c), r[d + 0] = v.x, r[d + 1] = v.y, r[d + 2] = 0, r[d + 3] = f.x, r[d + 4] = f.y, r[d + 5] = 0, r[d + 6] = _.x, r[d + 7] = _.y, r[d + 8] = 0, s[p + 0] = h, s[p + 1] = h, s[p + 2] = h;
-                const x = rng$5() * .4 + .4;
+                const x = rng$4() * .4 + .4;
                 o[p + 0] = x, o[p + 1] = x, o[p + 2] = x, a[p + 0] = 0, a[p + 1] = 1, a[p + 2] = 0;
             }
             if (this.speedLines.geometry = new BufferGeometry$1, this.speedLines.geometry.setAttribute("position", new Float32BufferAttribute$1(r, 3)), this.speedLines.geometry.setAttribute("timeRandomness", new Float32BufferAttribute$1(s, 1)), this.speedLines.geometry.setAttribute("distance", new Float32BufferAttribute$1(o, 1)), this.speedLines.geometry.setAttribute("tipness", new Float32BufferAttribute$1(a, 1)), this.speedLines.material = new MeshBasicNodeMaterial({
@@ -80769,242 +80769,6 @@ https://github.com/browserify/crypto-browserify`);
             });
         }
     }
-    class AltarArea extends Area {
-        constructor(e){
-            super(e), this.game.debug.active && (this.debugPanel = this.game.debug.panel.addFolder({
-                title: "💀 Altar",
-                expanded: !1
-            })), this.value = 0, this.position = this.references.items.get("altar")[0].position.clone(), this.color = uniform$1(color$1("#ff544d")), this.emissive = uniform$1(8), this.progressUniform = uniform$1(0), this.setSounds(), this.setBeam(), this.setBeamParticles(), this.setGlyphs(), this.setCounter(), this.setDeathZone(), this.setData(), this.setAchievement(), this.game.server.connected || this.updateText("..."), this.game.server.events.on("disconnected", ()=>{
-                this.updateText("...");
-            }), this.game.debug.active && (this.game.debug.addThreeColorBinding(this.debugPanel, this.color.value, "color"), this.debugPanel.addBinding(this.emissive, "value", {
-                label: "emissive",
-                min: 0,
-                max: 10,
-                step: .1
-            }));
-        }
-        setSounds() {
-            this.sounds = {}, this.sounds.chimers = this.game.audio.register({
-                path: "sounds/magic/Ghostly Whisper Background Loop 9.mp3",
-                autoplay: !0,
-                loop: !0,
-                volume: .15,
-                positions: this.references.items.get("altar")[0].position,
-                distanceFade: 20
-            }), this.sounds.deathBell1 = this.game.audio.register({
-                path: "sounds/bell/Death Hit.mp3",
-                autoplay: !1,
-                loop: !1,
-                volume: .4
-            }), this.sounds.deathBell2 = this.game.audio.register({
-                path: "sounds/bell/Epic Bell Impact Hit.mp3",
-                autoplay: !1,
-                loop: !1,
-                volume: .4
-            });
-        }
-        setBeam() {
-            this.height = 6, this.beamAttenuation = uniform$1(2);
-            const r = new CylinderGeometry(2.5, 2.5, this.height, 32, 1, !0);
-            r.translate(0, this.height * .5, 0);
-            const s = new MeshBasicNodeMaterial({
-                side: DoubleSide$1
-            });
-            s.outputNode = Fn$1(()=>{
-                const p = uv$2(), f = vec2$1(p.x.mul(6).add(p.y.mul(-2)), p.y.mul(1).sub(this.game.ticker.elapsedScaledUniform.mul(.2))), m = texture$1(this.game.noises.perlin, f).r;
-                m.addAssign(p.y.mul(this.beamAttenuation.add(1)));
-                const b = this.color.mul(this.emissive), v = this.game.fog.strength.mix(vec3$1(0), this.game.fog.color), _ = step$1(.65, m), x = mix$1(b, v, _);
-                return m.greaterThan(1).discard(), vec4$1(x, 1);
-            })();
-            const o = new Mesh$1(r, s);
-            o.position.copy(this.position), this.game.scene.add(o), this.objects.hideable.push(o);
-            const a = new PlaneGeometry(2.5 * 2, 2.5 * 2, 1, 1), c = this.game.resources.satanStarTexture;
-            c.minFilter = NearestFilter$1, c.magFilter = NearestFilter$1, c.generateMipmaps = !1;
-            const h = new MeshBasicNodeMaterial({
-                transparent: !0
-            });
-            h.outputNode = Fn$1(()=>{
-                const p = uv$2().sub(.5).mul(1.7).add(.5);
-                p.y.assign(p.y.oneMinus());
-                const f = texture$1(c, p).r, m = this.game.fog.strength.mix(vec3$1(0), this.game.fog.color), b = this.color.mul(this.emissive), v = mix$1(m, b, f);
-                return vec4$1(v, 1);
-            })();
-            const d = new Mesh$1(a, h);
-            d.position.copy(this.position), d.rotation.x = -Math.PI * .5, this.game.scene.add(d), this.objects.hideable.push(d), this.animateBeam = ()=>{
-                gsapWithCSS.to(this.beamAttenuation, {
-                    value: 0,
-                    ease: "power2.out",
-                    duration: .4,
-                    onComplete: ()=>{
-                        gsapWithCSS.to(this.beamAttenuation, {
-                            value: 2,
-                            ease: "power2.in",
-                            duration: 3
-                        });
-                    }
-                });
-            };
-        }
-        setBeamParticles() {
-            const r = uniform$1(0), s = new Float32Array(450), o = new Float32Array(150), a = new Float32Array(150);
-            for(let b = 0; b < 150; b++){
-                const v = b * 3, _ = new Spherical((1 - Math.pow(1 - Math.random(), 2)) * 5, Math.random() * Math.PI * .4, Math.random() * Math.PI * 2), x = new Vector3$1().setFromSpherical(_);
-                s[v + 0] = x.x, s[v + 1] = x.y, s[v + 2] = x.z, o[b] = Math.random(), a[b] = Math.random();
-            }
-            const c = instancedArray(s, "vec3").toAttribute(), h = instancedArray(o, "float").toAttribute(), d = instancedArray(a, "float").toAttribute(), p = new SpriteNodeMaterial;
-            p.outputNode = Fn$1(()=>{
-                const b = uv$2().sub(.5).length(), v = this.game.fog.strength.mix(vec3$1(0), this.game.fog.color), _ = this.color.mul(this.emissive), x = mix$1(v, _, step$1(b, .35));
-                return b.greaterThan(.5).discard(), vec4$1(x, 1);
-            })(), p.positionNode = Fn$1(()=>{
-                const b = r.remapClamp(0, .5, 1, 0).pow(6).oneMinus(), v = c.toVar().mulAssign(b);
-                return v.y.addAssign(r.mul(d)), v;
-            })(), p.scaleNode = Fn$1(()=>smoothstep$2(1, .3, r).mul(h))();
-            const f = new PlaneGeometry(.2, .2), m = new Mesh$1(f, p);
-            m.count = 150, m.position.copy(this.position), m.position.y -= .1, this.game.scene.add(m), this.objects.hideable.push(m), this.animateBeamParticles = ()=>{
-                gsapWithCSS.fromTo(r, {
-                    value: 0
-                }, {
-                    value: 1,
-                    ease: "linear",
-                    duration: 3
-                });
-            };
-        }
-        setGlyphs() {
-            const r = new Float32Array(120), s = new Float32Array(40);
-            for(let v = 0; v < 40; v++){
-                const _ = Math.PI * 2 * Math.random(), x = Math.random() * 5, $ = Math.random() * 8;
-                r[v * 3 + 0] = Math.sin(_) * $, r[v * 3 + 1] = x, r[v * 3 + 2] = Math.cos(_) * $, s[v] = .2 + Math.random() * .8;
-            }
-            const o = instancedArray(r, "vec3").toAttribute(), a = instancedArray(s, "float").toAttribute(), c = new SpriteNodeMaterial({
-                transparent: !0
-            }), h = varying$1(float$1(0));
-            c.positionNode = Fn$1(()=>{
-                h.assign(this.game.ticker.elapsedScaledUniform.mul(.05).add(float$1(instanceIndex$1).div(40)).fract());
-                const v = o.toVar();
-                return v.y.addAssign(h.mul(a)), v;
-            })(), c.scaleNode = Fn$1(()=>min$2(h.remapClamp(0, .1, 0, 1), h.remapClamp(.7, .8, 1, 0), 1).mul(.2))();
-            const d = this.game.materials.getFromName("emissiveBlueRadialGradient"), p = this.game.materials.getFromName("emissiveOrangeRadialGradient");
-            c.outputNode = Fn$1(()=>{
-                const v = uv$2().toVar();
-                return v.x.addAssign(instanceIndex$1), v.x.divAssign(32), texture$1(this.game.resources.achievementsGlyphsTexture, v).r.lessThan(.5).discard(), mix$1(p.outputNode, d.outputNode, float$1(instanceIndex$1).div(40).step(this.progressUniform));
-            })();
-            const f = new PlaneGeometry(1, 1), m = new Mesh$1(f, c);
-            m.renderOrder = 3, m.position.x = this.position.x, m.position.y = 0, m.position.z = this.position.z, m.count = 40, this.game.scene.add(m), this.objects.hideable.push(m);
-            let b = !0;
-            this.events.on("frustumIn", ()=>{
-                b && (this.game.ticker.wait(2, ()=>{
-                    m.geometry.boundingSphere.center.y = 2, m.geometry.boundingSphere.radius = 5;
-                }), b = !1);
-            });
-        }
-        setCounter() {
-            this.width = 256, this.height = this.width * .25, this.font = `700 ${this.height}px "Amatic SC"`;
-            const s = document.createElement("canvas");
-            s.width = this.width, s.height = this.height, this.textTexture = new Texture$1(s), this.textTexture.colorSpace = SRGBColorSpace$1, this.textTexture.minFilter = NearestFilter$1, this.textTexture.magFilter = NearestFilter$1, this.textTexture.generateMipmaps = !1, this.context = s.getContext("2d"), this.context.font = this.font;
-            const o = new PlaneGeometry(3, 3 * .25, 1, 1), a = new MeshBasicNodeMaterial({
-                transparent: !0
-            });
-            a.outputNode = Fn$1(()=>{
-                const c = texture$1(this.textTexture, uv$2()), h = this.game.fog.strength.mix(vec3$1(0), this.game.fog.color), d = this.color.mul(this.emissive), p = mix$1(h, d, c.g);
-                return c.r.add(c.g).lessThan(.5).discard(), vec4$1(p, 1);
-            })(), this.mesh = new Mesh$1(o, a), this.references.items.get("counter")[0].add(this.mesh);
-        }
-        setDeathZone() {
-            const e = this.position.clone();
-            e.y -= 1.25, this.game.zones.create("sphere", e, 2.5).events.on("enter", ()=>{
-                this.animateBeam(), this.animateBeamParticles(), this.data.insert(), this.updateText(this.value + 1), this.game.player.die(), this.sounds.deathBell2.play(), gsapWithCSS.delayedCall(2.2, ()=>{
-                    this.sounds.deathBell1.play();
-                }), this.game.achievements.setProgress("sacrifice", 1);
-            });
-        }
-        setData() {
-            this.data = {}, this.data.insert = ()=>{
-                this.game.server.send({
-                    type: "cataclysmInsert"
-                });
-            }, this.game.server.events.on("message", (e)=>{
-                (e.type === "init" || e.type === "cataclysmUpdate") && (this.updateText(e.cataclysmCount), this.progressUniform.value = e.cataclysmProgress);
-            }), this.game.server.initData && (this.updateText(this.game.server.initData.cataclysmCount), this.progressUniform.value = this.game.server.initData.cataclysmProgress);
-        }
-        updateText(e) {
-            let r = null;
-            if (typeof e == "number") {
-                if (e === this.value) return;
-                this.value = e, r = e.toLocaleString("en-US");
-            } else r = e;
-            this.context.font = this.font, this.context.fillStyle = "#000000", this.context.fillRect(0, 0, this.width, this.height), this.context.font = this.font, this.context.textAlign = "center", this.context.textBaseline = "middle", this.context.strokeStyle = "#ff0000", this.context.lineWidth = this.height * .15, this.context.strokeText(r, this.width * .5, this.height * .55), this.context.fillStyle = "#00ff00", this.context.fillText(r, this.width * .5, this.height * .55), this.textTexture.needsUpdate = !0, gsapWithCSS.to(this.mesh.scale, {
-                x: 1.5,
-                y: 1.5,
-                duration: .3,
-                overwrite: !0,
-                onComplete: ()=>{
-                    gsapWithCSS.to(this.mesh.scale, {
-                        x: 1,
-                        y: 1,
-                        duration: 2,
-                        ease: "elastic.out(1,0.3)",
-                        overwrite: !0
-                    });
-                }
-            });
-        }
-        setAchievement() {
-            this.events.on("boundingIn", ()=>{
-                this.game.achievements.setProgress("areas", "altar");
-            });
-        }
-    }
-    class InstancedGroup {
-        constructor(e = [], r = null, s = !0){
-            this.game = Game.getInstance(), this.references = e, this.group = r, this.count = this.references.length, this.needsUpdate = !1, this.setMeshes(), s && this.game.ticker.events.on("tick", ()=>{
-                this.update();
-            }, 13), this.update();
-        }
-        setMeshes() {
-            this.meshes = [], this.group.traverse((e)=>{
-                if (e.isMesh) {
-                    const r = {};
-                    e.updateMatrix(), e.updateWorldMatrix(), r.localMatrix = e.matrix, r.instance = new InstancedMesh(e.geometry, e.material, this.count), r.instance.name = e.name, r.instance.castShadow = e.castShadow, r.instance.receiveShadow = e.receiveShadow, r.instance.frustumCulled = e.frustumCulled, this.game.scene.add(r.instance), this.meshes.push(r);
-                }
-            });
-        }
-        static getReferencesFromChildren(e) {
-            const r = [];
-            for (const s of e){
-                const o = new Object3D$1;
-                o.position.copy(s.position), o.rotation.copy(s.rotation), o.scale.copy(s.scale), o.needsUpdate = !0, r.push(o);
-            }
-            return r;
-        }
-        static getBaseAndReferencesFromInstances(e) {
-            const r = e[0].clone();
-            r.position.set(0, 0, 0), r.rotation.set(0, 0, 0);
-            const s = InstancedGroup.getReferencesFromChildren(e);
-            return [
-                r,
-                s
-            ];
-        }
-        updateBoundings() {
-            for (const e of this.meshes)e.instance.computeBoundingSphere();
-        }
-        update() {
-            let e = 0, r = 0;
-            for (const s of this.references){
-                if (this.needsUpdate || s.needsUpdate) {
-                    e++, s.needsUpdate = !1, s.updateMatrixWorld();
-                    for (const o of this.meshes){
-                        const a = o.localMatrix.clone().premultiply(s.matrixWorld);
-                        o.instance.setMatrixAt(r, a);
-                    }
-                }
-                r++;
-            }
-            if (e) for (const s of this.meshes)s.instance.instanceMatrix.needsUpdate = !0;
-            this.needsUpdate = !1;
-        }
-    }
     class InteractivePoints {
         static ALIGN_LEFT = 1;
         static ALIGN_RIGHT = 2;
@@ -81286,210 +81050,6 @@ https://github.com/browserify/crypto-browserify`);
         recover() {
             this.temporaryHidden = !1;
             for (const e of this.items)e.recoveryState !== InteractivePoints.STATE_HIDDEN && e.show();
-        }
-    }
-    class CookieArea extends Area {
-        constructor(e){
-            super(e), this.game.debug.active && (this.debugPanel = this.game.debug.panel.addFolder({
-                title: "🍪 Cookie Stand",
-                expanded: !1
-            })), this.setSound(), this.setBlower(), this.setBanner(), this.setParticles(), this.setOvenHeat(), this.setCookies(), this.setActualCookies(), this.setInteractivePoint(), this.setCounter(), this.setAchievement();
-        }
-        setSound() {
-            this.sounds = {}, this.sounds.ding = this.game.audio.register({
-                path: "sounds/ding/Cash Register 03.mp3",
-                autoplay: !1,
-                loop: !1,
-                volume: .4,
-                antiSpam: .15,
-                onPlay: (e)=>{
-                    e.volume = .3 + Math.random() * .2, e.rate = 1 + Math.random() * .05;
-                }
-            });
-        }
-        setBlower() {
-            this.blower = this.references.items.get("blower")[0];
-        }
-        setBanner() {
-            const e = float$1(0).toVarying(), r = this.references.items.get("banner")[0];
-            r.material.positionNode = Fn$1(()=>{
-                const s = uv$2(), o = positionGeometry$1.toVar(), a = s.mul(vec2$1(.35, .175)).sub(vec2$1(.1, .05).mul(this.game.ticker.elapsedScaledUniform)), c = texture$1(this.game.noises.perlin, a).r;
-                e.assign(c.mul(s.y).mul(this.game.wind.strength));
-                const h = vec3$1(.5, 0, 1);
-                return o.addAssign(h.mul(e)), o;
-            })();
-        }
-        setParticles() {
-            const e = this.game.materials.getFromName("emissiveOrangeRadialGradient"), r = 30, s = uniform$1(3), o = new Float32Array(r * 3), a = new Float32Array(r);
-            this.localTime = uniform$1(0);
-            for(let v = 0; v < r; v++){
-                const _ = v * 3, x = Math.PI * 2 * Math.random(), $ = Math.pow(Math.random(), 1.5) * .4;
-                o[_ + 0] = Math.cos(x) * $, o[_ + 1] = Math.random(), o[_ + 2] = Math.sin(x) * $, a[v] = Math.random() * 1 + .75;
-            }
-            const c = instancedArray(o, "vec3").toAttribute(), h = instancedArray(a, "float").toAttribute(), d = new SpriteNodeMaterial;
-            d.outputNode = e.outputNode;
-            const p = float$1(0).toVar();
-            d.positionNode = Fn$1(()=>{
-                const v = c.toVar();
-                p.assign(v.y.add(this.localTime.mul(v.y)).fract()), v.y.assign(p.mul(s));
-                const _ = step$1(.8, p).mul(100);
-                return v.y.addAssign(_), v;
-            })(), d.scaleNode = Fn$1(()=>{
-                const v = p.remapClamp(.5, 1, 1, 0);
-                return h.mul(v);
-            })();
-            const f = new CircleGeometry(.015, 8), m = new Mesh$1(f, d);
-            m.position.copy(this.references.items.get("chimney")[0].position), m.count = r, this.game.scene.add(m);
-            let b = !0;
-            this.events.on("frustumIn", ()=>{
-                b && (this.game.ticker.wait(2, ()=>{
-                    m.geometry.boundingSphere.center.y = 1, m.geometry.boundingSphere.radius = 1;
-                }), b = !1);
-            }), this.objects.hideable.push(m);
-        }
-        setOvenHeat() {
-            const e = new MeshBasicNodeMaterial({
-                side: DoubleSide$1,
-                transparent: !0,
-                depthTest: !0,
-                depthWrite: !1
-            });
-            e.outputNode = Fn$1(()=>{
-                const r = uv$2().mul(vec2$1(2, .2));
-                r.y.addAssign(this.game.ticker.elapsedScaledUniform.mul(.05));
-                const o = texture$1(this.game.noises.perlin, r).r.mul(uv$2().y.pow(2)), a = o.smoothstep(0, .5), c = mix$1(color$1("#ff3e00"), color$1("#ff8641"), a).mul(o.add(1).mul(2));
-                return vec4$1(vec3$1(c), o);
-            })(), this.ovenHeat = this.references.items.get("ovenHeat")[0], this.ovenHeat.material = e, this.ovenHeat.castShadow = !1;
-        }
-        setCookies() {
-            const e = this.references.items.get("cookie")[0];
-            e.castShadow = !0, e.receiveShadow = !0, e.frustumCulled = !0, e.position.set(0, 0, 0), this.game.materials.updateObject(e), this.cookies = {}, this.cookies.spawnerPosition = this.references.items.get("spawner")[0].position, this.cookies.count = 20, this.cookies.visibleCount = 0, this.cookies.realCount = this.cookies.count + 2, this.cookies.currentIndex = 0, this.cookies.mass = .02, this.cookies.objects = [];
-            const r = [];
-            for(let s = 0; s < this.cookies.realCount; s++){
-                const o = s >= this.cookies.count, a = new Object3D$1;
-                o ? (a.position.copy(this.references.items.get("table")[0].position), a.position.y += (s - this.cookies.count) * .25) : (a.position.copy(this.cookies.spawnerPosition), a.position.y += 99), a.needsUpdate = !0, r.push(a);
-                const c = this.game.objects.add({
-                    model: a,
-                    updateMaterials: !1,
-                    castShadow: !1,
-                    receiveShadow: !1,
-                    parent: null
-                }, {
-                    type: "dynamic",
-                    position: a.position,
-                    rotation: a.quaternion,
-                    friction: .7,
-                    sleeping: !0,
-                    enabled: o,
-                    mass: this.cookies.mass,
-                    colliders: [
-                        {
-                            shape: "cylinder",
-                            parameters: [
-                                .55 / 2,
-                                1.25 / 2
-                            ],
-                            category: "object"
-                        }
-                    ],
-                    waterGravityMultiplier: -1
-                });
-                this.cookies.objects.push(c);
-            }
-            this.cookies.instancedGroup = new InstancedGroup(r, e);
-        }
-        setActualCookies() {
-            this.actualCookies = {}, this.actualCookies.count = 0;
-            const e = document.cookie.split("; ");
-            for (const r of e){
-                const s = r.match("^acceptedCookies=([0-9]+)");
-                s && (this.actualCookies.count = parseInt(s[1]));
-            }
-        }
-        setInteractivePoint() {
-            this.game.interactivePoints.create(this.references.items.get("interactivePoint")[0].position, "Accept cookie", InteractivePoints.ALIGN_RIGHT, InteractivePoints.STATE_CONCEALED, ()=>{
-                this.accept();
-            }, ()=>{
-                this.game.inputs.interactiveButtons.addItems([
-                    "interact"
-                ]);
-            }, ()=>{
-                this.game.inputs.interactiveButtons.removeItems([
-                    "interact"
-                ]);
-            }, ()=>{
-                this.game.inputs.interactiveButtons.removeItems([
-                    "interact"
-                ]);
-            });
-        }
-        setCounter() {
-            this.counter = {}, this.counter.value = 0, this.counter.panel = this.references.items.get("counterPanel")[0], this.counter.texture = null, this.counter.initialised = !1, this.counter.maxScale = 0;
-            const e = 64, r = 2, s = `700 ${e}px "Amatic SC"`, o = document.createElement("canvas");
-            o.style.position = "fixed", o.style.zIndex = 999, o.style.top = 0, o.style.left = 0;
-            const a = o.getContext("2d");
-            a.font = s, this.counter.init = ()=>{
-                if (this.counter.initialised) return;
-                this.counter.initialised = !0, o.width = 256, o.height = e, this.counter.texture = new Texture$1(o), this.counter.texture.minFilter = NearestFilter$1, this.counter.texture.magFilter = NearestFilter$1, this.counter.texture.generateMipmaps = !1;
-                const c = new PlaneGeometry(1, 1), h = new MeshDefaultMaterial({
-                    alphaNode: texture$1(this.counter.texture).r,
-                    hasWater: !1,
-                    hasLightBounce: !1
-                }), d = new Mesh$1(c, h);
-                d.position.copy(this.references.items.get("counterLabel")[0].position), d.quaternion.copy(this.references.items.get("counterLabel")[0].quaternion), d.receiveShadow = !0, d.scale.y = .75, d.scale.x = o.width / o.height * .75, this.game.scene.add(d), this.counter.update(), this.counter.update();
-            }, this.counter.add = ()=>{
-                this.counter.value++, this.throttleAmount++, this.counter.update();
-            }, this.counter.update = ()=>{
-                if (!this.counter.initialised) return;
-                const c = this.counter.value.toLocaleString("en-US"), h = a.measureText(c), p = (Math.ceil(h.width) + 30) / 105;
-                a.fillStyle = "#000000", a.fillRect(0, 0, o.width, o.height), a.font = s, a.fillStyle = "#ffffff", a.textAlign = "center", a.textBaseline = "middle", a.fillText(c, o.width / 2, o.height * .5 + r), p > this.counter.maxScale && (this.counter.maxScale = p, this.counter.panel.scale.x = p), this.counter.texture.needsUpdate = !0;
-            }, this.throttleAmount = 0, this.counter.throttleUpdate = ()=>{
-                this.throttleAmount > 0 && (this.game.server.send({
-                    type: "cookiesInsert",
-                    amount: this.throttleAmount
-                }), this.throttleAmount = 0);
-            }, setInterval(()=>{
-                this.counter.throttleUpdate();
-            }, 1e3), this.game.server.events.on("message", (c)=>{
-                (c.type === "init" || c.type === "cookiesUpdate") && c.cookiesCount > this.counter.value && (this.counter.value = c.cookiesCount, this.counter.update());
-            }), this.game.server.initData && (this.counter.value = this.game.server.initData.cookiesCount), this.game.server.connected && this.counter.init(), this.game.server.events.on("connected", ()=>{
-                this.counter.init();
-            });
-        }
-        setAchievement() {
-            this.events.on("boundingIn", ()=>{
-                this.game.achievements.setProgress("areas", "cookie");
-            });
-        }
-        accept() {
-            const e = this.cookies.objects[this.cookies.currentIndex], r = this.cookies.spawnerPosition.clone();
-            r.z += Math.random() - .5, e.physical.body.setTranslation(r), e.physical.body.setEnabled(!0), this.game.ticker.wait(2, ()=>{
-                const s = {
-                    x: (Math.random() - .5) * this.cookies.mass * 2,
-                    y: Math.random() * this.cookies.mass * 3,
-                    z: this.cookies.mass * 7
-                };
-                e.physical.body.applyImpulse(s, !0), e.physical.body.applyTorqueImpulse({
-                    x: 0,
-                    y: 0,
-                    z: 0
-                }, !0);
-            }), this.cookies.currentIndex = (this.cookies.currentIndex + 1) % this.cookies.count, this.cookies.visibleCount = Math.min(this.cookies.visibleCount + 1, this.cookies.count), this.ovenHeat.scale.z = 2, gsapWithCSS.to(this.ovenHeat.scale, {
-                z: 1,
-                overwrite: !0,
-                duration: 2,
-                delay: .2,
-                ease: "power1.inOut"
-            }), this.counter.add(), this.sounds.ding.play(), document.cookie = `acceptedCookies=${++this.actualCookies.count}`, this.game.achievements.addProgress("cookie");
-        }
-        update() {
-            const e = (Math.sin(this.game.ticker.elapsedScaled) * .3 + .5) * .3;
-            if (this.localTime.value += this.game.ticker.deltaScaled * e, this.blower.scale.y = Math.sin(this.game.ticker.elapsedScaled + Math.PI) * .25 + .75, this.cookies.visibleCount) {
-                let r = !0;
-                for (const s of this.cookies.objects)r = r && s.physical.body.isSleeping();
-                r || this.cookies.instancedGroup.updateBoundings();
-            }
-            for (const r of this.cookies.objects)!r.physical.body.isSleeping() && r.physical.body.isEnabled() && (r.visual.object3D.needsUpdate = !0);
         }
     }
     class LandingArea extends Area {
@@ -82491,29 +82051,54 @@ https://github.com/browserify/crypto-browserify`);
             s !== this.year.current && (this.year.current = s, this.year.updateDigits(this.year.current));
         }
     }
-    class ToiletArea extends Area {
-        constructor(e){
-            super(e), this.setCabin(), this.setCandleFlames(), this.setAchievement();
+    class InstancedGroup {
+        constructor(e = [], r = null, s = !0){
+            this.game = Game.getInstance(), this.references = e, this.group = r, this.count = this.references.length, this.needsUpdate = !1, this.setMeshes(), s && this.game.ticker.events.on("tick", ()=>{
+                this.update();
+            }, 13), this.update();
         }
-        setCabin() {
-            this.cabin = {}, this.cabin.body = this.references.items.get("cabin")[0].userData.object.physical.body, this.cabin.down = !1;
-        }
-        setCandleFlames() {
-            const e = this.references.items.get("moon")[0];
-            e.visible = this.game.dayCycles.intervalEvents.get("night").inInterval, this.game.dayCycles.events.on("night", (r)=>{
-                e.visible = r;
+        setMeshes() {
+            this.meshes = [], this.group.traverse((e)=>{
+                if (e.isMesh) {
+                    const r = {};
+                    e.updateMatrix(), e.updateWorldMatrix(), r.localMatrix = e.matrix, r.instance = new InstancedMesh(e.geometry, e.material, this.count), r.instance.name = e.name, r.instance.castShadow = e.castShadow, r.instance.receiveShadow = e.receiveShadow, r.instance.frustumCulled = e.frustumCulled, this.game.scene.add(r.instance), this.meshes.push(r);
+                }
             });
         }
-        setAchievement() {
-            this.events.on("boundingIn", ()=>{
-                this.game.achievements.setProgress("areas", "toilet");
-            });
+        static getReferencesFromChildren(e) {
+            const r = [];
+            for (const s of e){
+                const o = new Object3D$1;
+                o.position.copy(s.position), o.rotation.copy(s.rotation), o.scale.copy(s.scale), o.needsUpdate = !0, r.push(o);
+            }
+            return r;
+        }
+        static getBaseAndReferencesFromInstances(e) {
+            const r = e[0].clone();
+            r.position.set(0, 0, 0), r.rotation.set(0, 0, 0);
+            const s = InstancedGroup.getReferencesFromChildren(e);
+            return [
+                r,
+                s
+            ];
+        }
+        updateBoundings() {
+            for (const e of this.meshes)e.instance.computeBoundingSphere();
         }
         update() {
-            if (!this.cabin.down && !this.cabin.body.isSleeping()) {
-                const e = new Vector3$1(0, 1, 0);
-                e.applyQuaternion(this.cabin.body.rotation()), e.y < .4 && (this.cabin.down = !0, this.game.achievements.setProgress("toiletDown", 1));
+            let e = 0, r = 0;
+            for (const s of this.references){
+                if (this.needsUpdate || s.needsUpdate) {
+                    e++, s.needsUpdate = !1, s.updateMatrixWorld();
+                    for (const o of this.meshes){
+                        const a = o.localMatrix.clone().premultiply(s.matrixWorld);
+                        o.instance.setMatrixAt(r, a);
+                    }
+                }
+                r++;
             }
+            if (e) for (const s of this.meshes)s.instance.instanceMatrix.needsUpdate = !0;
+            this.needsUpdate = !1;
         }
     }
     class BowlingArea extends Area {
@@ -84655,303 +84240,21 @@ https://github.com/browserify/crypto-browserify`);
             this.timer.update();
         }
     }
-    class PortalSlabGeometry extends BufferGeometry$1 {
-        constructor(e = 1){
-            super(), this.type = "PortalSlabsGeometry", this.parameters = {
-                size: e
-            };
-            const r = new Float32Array(24);
-            r[0] = -e, r[1] = 0, r[2] = -e, r[3] = -e, r[4] = 0, r[5] = -e, r[6] = e, r[7] = 0, r[8] = -e, r[9] = e, r[10] = 0, r[11] = -e, r[12] = e, r[13] = 0, r[14] = e, r[15] = e, r[16] = 0, r[17] = e, r[18] = -e, r[19] = 0, r[20] = e, r[21] = -e, r[22] = 0, r[23] = e;
-            const s = new Float32Array(8);
-            s[0] = 0, s[1] = 1, s[2] = 0, s[3] = 1, s[4] = 0, s[5] = 1, s[6] = 0, s[7] = 1;
-            const o = new Uint16Array(24);
-            o[0] = 0, o[1] = 3, o[2] = 2, o[3] = 3, o[4] = 0, o[5] = 1, o[6] = 2, o[7] = 5, o[8] = 4, o[9] = 5, o[10] = 2, o[11] = 3, o[12] = 4, o[13] = 7, o[14] = 6, o[15] = 7, o[16] = 4, o[17] = 5, o[18] = 6, o[19] = 1, o[20] = 0, o[21] = 1, o[22] = 6, o[23] = 7, this.setAttribute("position", new Float32BufferAttribute$1(r, 3)), this.setAttribute("edge", new Float32BufferAttribute$1(s, 3)), this.setIndex(new Uint16BufferAttribute$1(o, 1));
-        }
-    }
-    class PortalSlabsGeometry extends BufferGeometry$1 {
-        constructor(e = 1, r = 5){
-            super(), this.type = "PortalSlabsGeometry", this.parameters = {
-                size: e,
-                columnsCount: r
-            };
-            const s = new PortalSlabGeometry, o = s.attributes.position.count, a = s.index.count, c = s.attributes.position.array, h = s.attributes.edge.array, d = s.index.array, p = r * r, f = new Float32Array(o * p * 3), m = new Float32Array(o * p * 2), b = new Float32Array(o * p), v = new Float32Array(o * p), _ = new Float32Array(o * p), x = new Uint16Array(a * p);
-            for(let $ = 0; $ < r; $++)for(let w = 0; w < r; w++){
-                const M = ($ - (r - 1) * .5) * e, R = (w - (r - 1) * .5) * e, F = Math.random();
-                let O = w + $ * r;
-                for(let V = 0; V < o; V++)f[(O * o + V) * 3 + 0] = c[V * 3 + 0] * e / 2 + M, f[(O * o + V) * 3 + 1] = c[V * 3 + 1], f[(O * o + V) * 3 + 2] = c[V * 3 + 2] * e / 2 + R, m[(O * o + V) * 2 + 0] = M, m[(O * o + V) * 2 + 1] = R, b[O * o + V] = h[V], v[O * o + V] = F, _[O * o + V] = Math.hypot(M, R);
-                for(let V = 0; V < a; V++)x[O * a + V] = O * o + d[V + 0];
-            }
-            this.setAttribute("position", new Float32BufferAttribute$1(f, 3)), this.setAttribute("center", new Float32BufferAttribute$1(m, 2)), this.setAttribute("edge", new Float32BufferAttribute$1(b, 1)), this.setAttribute("random", new Float32BufferAttribute$1(v, 1)), this.setAttribute("distanceToCenter", new Float32BufferAttribute$1(_, 1)), this.setIndex(new Uint16BufferAttribute$1(x, 1));
-        }
-    }
-    class BehindTheSceneArea extends Area {
-        constructor(e){
-            super(e), this.game.debug.active && (this.debugPanel = this.game.debug.panel.addFolder({
-                title: "🔳 Behind the scene",
-                expanded: !1
-            })), this.center = this.references.items.get("center")[0].position, this.setSounds(), this.setSlabs(), this.setInteractivePoint(), this.setAchievement();
-        }
-        setSounds() {
-            this.sounds = {}, this.sounds.chimers = this.game.audio.register({
-                path: "sounds/magic/Environmental Loop Scifi Bright Glassy Wandering Tones Layered 02.mp3",
-                autoplay: !0,
-                loop: !0,
-                volume: .15,
-                positions: this.references.items.get("interactivePoint")[0].position,
-                distanceFade: 20
-            });
-        }
-        setSlabs() {
-            const e = new PortalSlabsGeometry(1.5, 6), r = new MeshBasicMaterial$1({
-                wireframe: !1
-            }), s = varying$1(float$1());
-            this.vehicleRelativePosition = uniform$1(vec2$1()), this.bloomColor = uniform$1(color$1("#6053ff")), this.bloomIntensity = uniform$1(14), this.starsOffset = uniform$1(vec2$1(0)), r.positionNode = Fn$1(()=>{
-                const o = attribute$1("random"), a = attribute$1("edge"), c = attribute$1("center"), h = attribute$1("distanceToCenter"), d = positionGeometry$1.toVar(), p = sin$1(this.game.ticker.elapsedScaledUniform.mul(.5).add(o.mul(PI2))).mul(.5), f = c.sub(this.vehicleRelativePosition).length(), m = h.remap(0, 3.5, 3, 0).toVar();
-                m.addAssign(p), m.assign(m.clamp(0, 1)), m.addAssign(f.remapClamp(2, 4, -1, 0)), s.assign(m), m.mulAssign(a);
-                const b = d.xz.sub(c);
-                return b.mulAssign(m), d.xz.subAssign(b), d;
-            })(), r.outputNode = Fn$1(()=>{
-                const o = attribute$1("edge"), a = s.remapClamp(.1, 1, .5, 0), c = o.remapClamp(0, 1, .98, 1), h = o.toVar().sub(.5).abs().mul(2).add(a).step(c), d = screenCoordinate$1.div(256).fract().add(this.starsOffset), p = texture$1(this.game.resources.behindTheSceneStarsTexture, d).rgb.pow(2).mul(5), f = this.bloomColor.mul(this.bloomIntensity), m = mix$1(p, f, h);
-                return vec4$1(m, 1);
-            })(), this.slabs = new Mesh$1(e, r), this.slabs.position.copy(this.center), this.slabs.position.y += .01, this.game.scene.add(this.slabs), this.objects.hideable.push(this.slabs), this.game.debug.active && (this.game.debug.addThreeColorBinding(this.debugPanel, this.bloomColor.value, "bloomColor"), this.debugPanel.addBinding(this.bloomIntensity, "value", {
-                label: "bloomIntensity",
-                min: 0,
-                max: 20,
-                step: .001
-            }));
-        }
-        setInteractivePoint() {
-            this.interactivePoint = this.game.interactivePoints.create(this.references.items.get("interactivePoint")[0].position, "Behind the scene", InteractivePoints.ALIGN_RIGHT, InteractivePoints.STATE_CONCEALED, ()=>{
-                this.game.inputs.interactiveButtons.clearItems(), this.game.menu.open("behindTheScene"), this.interactivePoint.hide();
-            }, ()=>{
-                this.game.inputs.interactiveButtons.addItems([
-                    "interact"
-                ]);
-            }, ()=>{
-                this.game.inputs.interactiveButtons.removeItems([
-                    "interact"
-                ]);
-            }, ()=>{
-                this.game.inputs.interactiveButtons.removeItems([
-                    "interact"
-                ]);
-            }), this.game.menu.items.get("behindTheScene").events.on("close", ()=>{
-                this.interactivePoint.show();
-            });
-        }
-        setAchievement() {
-            this.events.on("boundingIn", ()=>{
-                this.game.achievements.setProgress("areas", "behindTheScene");
-            });
-        }
-        update() {
-            this.vehicleRelativePosition.value.x = this.game.physicalVehicle.position.x - this.slabs.position.x, this.vehicleRelativePosition.value.y = this.game.physicalVehicle.position.z - this.slabs.position.z;
-            const e = new Vector2$1(this.game.view.focusPoint.smoothedPosition.x, this.game.view.focusPoint.smoothedPosition.z);
-            e.rotateAround(new Vector2$1, Math.PI * .25), this.starsOffset.value.x = e.x * .1, this.starsOffset.value.y = e.y * .1;
-        }
-    }
-    const rng$4 = new seedrandomExports.alea("achievements");
-    class AchievementsArea extends Area {
-        constructor(e){
-            super(e), this.setSounds(), this.setWaterfall(), this.setPillar(), this.setInteractivePoint(), this.setAchievement();
-        }
-        setSounds() {
-            this.sounds = {}, this.sounds.chimers = this.game.audio.register({
-                path: "sounds/magic/Mountain Audio - Small Chimes - Loop.mp3",
-                autoplay: !0,
-                loop: !0,
-                volume: .15,
-                positions: this.references.items.get("pillar")[0].position,
-                distanceFade: 20
-            });
-        }
-        setWaterfall() {
-            const e = uniform$1(color$1(this.game.terrain.colors[1].value)), r = uniform$1(color$1(this.game.terrain.colors[2].value));
-            {
-                const s = Fn$1(()=>{
-                    const c = uv$2().toVar(), h = color$1();
-                    {
-                        const d = c.x.sub(.5).mul(2).abs().pow3().max(0), p = mix$1(r, e, d);
-                        h.assign(p);
-                    }
-                    {
-                        const d = c.toVar();
-                        d.x.assign(d.x.sub(.5).abs().mul(2));
-                        const p = d.sub(vec2$1(this.game.ticker.elapsedScaledUniform.mul(.05), 0)).mul(vec2$1(.35, .96)), f = texture$1(this.game.noises.voronoi, p).r, m = d.sub(vec2$1(this.game.ticker.elapsedScaledUniform.mul(.041), 0)).mul(vec2$1(.75, 1.28)), b = texture$1(this.game.noises.voronoi, m).r, v = min$2(f, b), _ = c.x.sub(.5).abs().mul(2).add(.5).mul(.5).oneMinus(), x = v.step(_);
-                        h.assign(mix$1(h, color$1("#ffffff"), x));
-                    }
-                    return vec3$1(h);
-                })(), o = new MeshDefaultMaterial({
-                    colorNode: s,
-                    hasLightBounce: !1,
-                    hasWater: !1,
-                    hasReveal: !1
-                }), a = this.references.items.get("waterfallStill")[0];
-                a.material = o;
-            }
-            {
-                const s = Fn$1(()=>{
-                    const c = uv$2().toVar();
-                    {
-                        const h = c.sub(vec2$1(0, this.game.ticker.elapsedScaledUniform.mul(.11))).mul(vec2$1(.7, .6)), d = texture$1(this.game.noises.voronoi, h).r, p = c.sub(vec2$1(0, this.game.ticker.elapsedScaledUniform.mul(.085))).mul(vec2$1(1.5, .8)), f = texture$1(this.game.noises.voronoi, p).r, m = min$2(d, f), b = c.y.sub(.5).abs().mul(2).add(.5).mul(.5);
-                        m.lessThan(b).discard();
-                    }
-                    return vec3$1(1);
-                })(), o = new MeshDefaultMaterial({
-                    colorNode: s,
-                    hasLightBounce: !1,
-                    hasWater: !1,
-                    hasReveal: !1
-                }), a = this.references.items.get("waterfallDrop")[0];
-                a.material = o;
-            }
-            {
-                const s = this.references.items.get("waterfallParticles")[0];
-                s.removeFromParent();
-                const o = new Vector3$1(s.geometry.attributes.position.array[0], s.geometry.attributes.position.array[1], s.geometry.attributes.position.array[2]), a = new Vector3$1(s.geometry.attributes.position.array[3], s.geometry.attributes.position.array[4], s.geometry.attributes.position.array[5]);
-                o.applyMatrix4(s.matrixWorld), a.applyMatrix4(s.matrixWorld);
-                const c = o.distanceTo(a), h = a.clone().sub(o), d = 100, p = new Float32Array(d * 3), f = new Float32Array(d);
-                for(let $ = 0; $ < d; $++)p[$ * 3 + 0] = 0, p[$ * 3 + 1] = 0, p[$ * 3 + 2] = c * Math.random(), f[$] = Math.PI - Math.PI * .5 * Math.random();
-                const m = instancedArray(p, "vec3").toAttribute(), b = instancedArray(f, "float").toAttribute(), v = new MeshDefaultMaterial({
-                    hasLightBounce: !1,
-                    hasWater: !1,
-                    hasReveal: !1,
-                    alphaTest: .1
-                });
-                v.positionNode = Fn$1(()=>{
-                    const $ = this.game.ticker.elapsedScaledUniform.mul(.2).add(float$1(instanceIndex$1).div(d)).fract(), w = $.oneMinus().mul(.4), R = positionGeometry$1.toVar().mul(w).add(m).toVar(), F = $.oneMinus().pow2().oneMinus();
-                    return R.y.addAssign(sin$1(b).mul(F).mul(2)), R.x.addAssign(cos$1(b).mul(F).mul(1.5)), R;
-                })(), v._alphaNode = Fn$1(()=>uv$2().sub(.5).length().oneMinus().sub(.5))();
-                const _ = new PlaneGeometry(1, 1);
-                _.rotateY(-Math.PI * .5), _.rotateZ(-Math.PI * .25);
-                const x = new InstancedMesh(_, v, d);
-                x.receiveShadow = !0, x.castShadow = !0, x.lookAt(h.multiplyScalar(-1)), x.position.copy(a), x.count = d, this.game.scene.add(x), this.objects.hideable.push(x);
-            }
-        }
-        setPillar() {
-            this.pillar = this.references.items.get("pillar")[0];
-            {
-                const e = this.game.achievements.globalProgress.totalCount, r = new Float32Array(e * 3), s = new Float32Array(e);
-                for(let b = 0; b < e; b++){
-                    const v = Math.PI * rng$4() - Math.PI * .25, _ = rng$4() * 2, x = 2 + rng$4() * .25;
-                    r[b * 3 + 0] = Math.sin(v) * x, r[b * 3 + 1] = _, r[b * 3 + 2] = Math.cos(v) * x, s[b] = .2 + rng$4() * .8;
-                }
-                const o = instancedArray(r, "vec3").toAttribute(), a = instancedArray(s, "float").toAttribute(), c = new SpriteNodeMaterial({}), h = varying$1(float$1(0));
-                c.positionNode = Fn$1(()=>{
-                    h.assign(this.game.ticker.elapsedScaledUniform.mul(.05).add(float$1(instanceIndex$1).div(e)).fract());
-                    const b = o.toVar();
-                    return b.y.addAssign(h.mul(a)), b;
-                })(), c.scaleNode = Fn$1(()=>min$2(h.remapClamp(0, .1, 0, 1), h.remapClamp(.7, .8, 1, 0), 1).mul(.2))();
-                const d = this.game.materials.getFromName("emissiveOrangeRadialGradient"), p = this.game.materials.getFromName("emissiveBlueRadialGradient");
-                c.outputNode = Fn$1(()=>{
-                    const b = uv$2().toVar();
-                    return b.x.addAssign(instanceIndex$1), b.x.divAssign(32), texture$1(this.game.resources.achievementsGlyphsTexture, b).r.lessThan(.5).discard(), mix$1(p.outputNode, d.outputNode, float$1(instanceIndex$1).div(e).step(this.game.achievements.globalProgress.ratioUniform));
-                })();
-                const f = new PlaneGeometry(1, 1), m = new Mesh$1(f, c);
-                m.position.x = this.pillar.position.x, m.position.y = 2, m.position.z = this.pillar.position.z, m.count = e, this.game.scene.add(m), this.objects.hideable.push(m);
-            }
-        }
-        setInteractivePoint() {
-            this.interactivePoint = this.game.interactivePoints.create(this.references.items.get("interactivePoint")[0].position, "Achievements", InteractivePoints.ALIGN_RIGHT, InteractivePoints.STATE_CONCEALED, ()=>{
-                this.game.inputs.interactiveButtons.clearItems(), this.game.menu.open("achievements"), this.interactivePoint.hide();
-            }, ()=>{
-                this.game.inputs.interactiveButtons.addItems([
-                    "interact"
-                ]);
-            }, ()=>{
-                this.game.inputs.interactiveButtons.removeItems([
-                    "interact"
-                ]);
-            }, ()=>{
-                this.game.inputs.interactiveButtons.removeItems([
-                    "interact"
-                ]);
-            }), this.game.menu.items.get("achievements").events.on("close", ()=>{
-                this.interactivePoint.show();
-            });
-        }
-        setAchievement() {
-            this.events.on("boundingIn", ()=>{
-                this.game.achievements.setProgress("areas", "achievements");
-            });
-            const e = this.references.items.get("waterfallZone")[0], r = e.position.clone(), s = e.scale.x;
-            this.game.zones.create("cylinder", r, s).events.on("enter", ()=>{
-                this.game.achievements.setProgress("waterfall", 1);
-            });
-        }
-        update() {
-            this.pillar.position.y = Math.sin(this.game.ticker.elapsedScaled * .1) * .25;
-        }
-    }
-    class TimeMachineArea extends Area {
-        constructor(e){
-            super(e), this.setInteractivePoint(), this.setTV(), this.setAchievement();
-        }
-        setInteractivePoint() {
-            this.interactivePoint = this.game.interactivePoints.create(this.references.items.get("interactivePoint")[0].position, "Time Machine", InteractivePoints.ALIGN_RIGHT, InteractivePoints.STATE_CONCEALED, ()=>{
-                window.open("https://2019.bruno-simon.com");
-            }, ()=>{
-                this.game.inputs.interactiveButtons.addItems([
-                    "interact"
-                ]);
-            }, ()=>{
-                this.game.inputs.interactiveButtons.removeItems([
-                    "interact"
-                ]);
-            }, ()=>{
-                this.game.inputs.interactiveButtons.removeItems([
-                    "interact"
-                ]);
-            });
-        }
-        setTV() {
-            let e = !0, r = 0;
-            const s = [
-                this.game.resources.timeMachineScreenFolioTexture,
-                this.game.resources.timeMachineScreenMGSTexture
-            ], o = this.game.audio.register({
-                path: "sounds/tv/alert.mp3",
-                autoplay: !1,
-                loop: !1,
-                volume: .3,
-                preload: !0
-            }), a = this.references.items.get("tv")[0];
-            a.userData.object.physical.onCollision = (p, f)=>{
-                if (e) {
-                    e = !1, r++, h.outputNode = d(), h.needsUpdate = !0;
-                    const m = this.game.audio.groups.get("click");
-                    m && m.play(!0), r === 1 && o.play(), gsapWithCSS.delayedCall(1, ()=>{
-                        e = !0;
-                    });
-                }
-            };
-            const c = this.references.items.get("screen")[0], h = new MeshBasicNodeMaterial, d = Fn$1(()=>{
-                const p = vec2$1(uv$2().x, uv$2().y), f = texture$1(s[r % s.length], p), m = texture$1(this.game.noises.perlin, vec2$1(p.y.add(this.game.ticker.elapsedScaledUniform.mul(.1)), 0)).r.smoothstep(0, 1);
-                return vec4$1(f.rgb.mul(m.mul(r % s.length === 0 ? 1 : 3).add(1)), 1);
-            });
-            h.outputNode = d(), c.material = h;
-        }
-        setAchievement() {
-            this.events.on("boundingIn", ()=>{
-                this.game.achievements.setProgress("areas", "timeMachine");
-            });
-        }
-    }
     class Areas {
         constructor(){
             this.game = Game.getInstance();
             const e = [
                 [
                     "achievements",
-                    AchievementsArea
+                    Area
                 ],
                 [
                     "altar",
-                    AltarArea
+                    Area
                 ],
                 [
                     "behindTheScene",
-                    BehindTheSceneArea
+                    Area
                 ],
                 [
                     "bowling",
@@ -84967,7 +84270,7 @@ https://github.com/browserify/crypto-browserify`);
                 ],
                 [
                     "cookie",
-                    CookieArea
+                    Area
                 ],
                 [
                     "lab",
@@ -84979,11 +84282,11 @@ https://github.com/browserify/crypto-browserify`);
                 ],
                 [
                     "toilet",
-                    ToiletArea
+                    Area
                 ],
                 [
                     "timeMachine",
-                    TimeMachineArea
+                    Area
                 ]
             ], r = [
                 ...this.game.resources.areasModel.scene.children
@@ -92870,20 +92173,24 @@ https://github.com/browserify/crypto-browserify`);
             };
         }
         setGlobalProgress() {
-            this.globalProgress = {}, this.globalProgress.element = this.menu.instance.contentElement.querySelector(".js-global-progress"), this.globalProgress.currentElement = this.globalProgress.element.querySelector(".js-current"), this.globalProgress.totalElement = this.globalProgress.element.querySelector(".js-total"), this.globalProgress.timeElement = this.globalProgress.element.querySelector(".js-time"), this.globalProgress.achieved = !1, this.globalProgress.achievedCount = 0, this.globalProgress.totalCount = 0, this.globalProgress.ratioUniform = uniform$1(), this.globalProgress.timeStart = 0, this.globalProgress.timeEnd = 0;
+            this.globalProgress = {}, this.globalProgress.element = this.menu.instance?.contentElement.querySelector(".js-global-progress") ?? null, this.globalProgress.currentElement = this.globalProgress.element?.querySelector(".js-current") ?? null, this.globalProgress.totalElement = this.globalProgress.element?.querySelector(".js-total") ?? null, this.globalProgress.timeElement = this.globalProgress.element?.querySelector(".js-time") ?? null, this.globalProgress.achieved = !1, this.globalProgress.achievedCount = 0, this.globalProgress.totalCount = 0, this.globalProgress.ratioUniform = uniform$1(), this.globalProgress.timeStart = 0, this.globalProgress.timeEnd = 0;
             let e = localStorage.getItem("achievementsTimeStart");
             e && (e = parseFloat(e), isNaN(e) || (this.globalProgress.timeStart = e));
             let r = localStorage.getItem("achievementsTimeEnd");
             r && (r = parseFloat(r), isNaN(r) || (this.globalProgress.timeEnd = r)), this.globalProgress.update = ()=>{
                 this.globalProgress.achievedCount = 0, this.globalProgress.totalCount = 0, this.groups.forEach((s)=>{
                     for (const o of s.items)this.globalProgress.achievedCount += o.achieved ? 1 : 0, this.globalProgress.totalCount++;
-                }), this.globalProgress.ratioUniform.value = this.globalProgress.achievedCount / this.globalProgress.totalCount, this.globalProgress.totalElement.textContent = this.globalProgress.totalCount, this.globalProgress.currentElement.textContent = this.globalProgress.achievedCount, this.globalProgress.achievedCount === this.globalProgress.totalCount && (this.globalProgress.achieved || (localStorage.getItem("achievementsTimeEnd") || (this.globalProgress.timeEnd = this.game.player.timePlayed.all, localStorage.setItem("achievementsTimeEnd", this.globalProgress.timeEnd)), this.globalProgress.timeElement.textContent = timeToReadableString(this.globalProgress.timeEnd - this.globalProgress.timeStart), this.globalProgress.achieved = !0, this.globalProgress.element.classList.add("is-achieved")));
+                }), this.globalProgress.ratioUniform.value = this.globalProgress.achievedCount / this.globalProgress.totalCount, this.globalProgress.totalElement && (this.globalProgress.totalElement.textContent = this.globalProgress.totalCount), this.globalProgress.currentElement && (this.globalProgress.currentElement.textContent = this.globalProgress.achievedCount), this.globalProgress.achievedCount === this.globalProgress.totalCount && (this.globalProgress.achieved || (localStorage.getItem("achievementsTimeEnd") || (this.globalProgress.timeEnd = this.game.player.timePlayed.all, localStorage.setItem("achievementsTimeEnd", this.globalProgress.timeEnd)), this.globalProgress.timeElement && (this.globalProgress.timeElement.textContent = timeToReadableString(this.globalProgress.timeEnd - this.globalProgress.timeStart)), this.globalProgress.achieved = !0, this.globalProgress.element?.classList.add("is-achieved")));
             }, this.globalProgress.reset = ()=>{
-                this.globalProgress.achieved = !1, this.globalProgress.currentElement.textContent = 0, this.globalProgress.timeStart = this.game.player.timePlayed.all, this.globalProgress.timeEnd = 0, localStorage.setItem("achievementsTimeStart", this.globalProgress.timeStart), localStorage.removeItem("achievementsTimeEnd"), this.globalProgress.element.classList.remove("is-achieved");
+                this.globalProgress.achieved = !1, this.globalProgress.currentElement && (this.globalProgress.currentElement.textContent = 0), this.globalProgress.timeStart = this.game.player.timePlayed.all, this.globalProgress.timeEnd = 0, localStorage.setItem("achievementsTimeStart", this.globalProgress.timeStart), localStorage.removeItem("achievementsTimeEnd"), this.globalProgress.element?.classList.remove("is-achieved");
             }, this.globalProgress.update();
         }
         setRewards() {
-            this.rewards = {}, this.rewards.elements = this.menu.instance.contentElement.querySelectorAll(".js-reward"), this.rewards.items = new Map, this.rewards.default = null, this.rewards.count = this.rewards.elements.length;
+            this.rewards = {}, this.rewards.elements = this.menu.instance?.contentElement.querySelectorAll(".js-reward") ?? [], this.rewards.items = new Map, this.rewards.default = {
+                name: "red",
+                locked: !1,
+                element: null
+            }, this.rewards.count = this.rewards.elements.length;
             let e = 0;
             for (const s of this.rewards.elements){
                 const o = {};
@@ -92897,14 +92204,14 @@ https://github.com/browserify/crypto-browserify`);
                 const s = this.rewards.items.get(r);
                 s && (this.rewards.current = s);
             }
-            this.rewards.current.element.classList.add("is-active"), this.rewards.set = (s)=>{
+            this.rewards.current.element?.classList.add("is-active"), this.rewards.set = (s)=>{
                 const o = this.rewards.items.get(s);
-                return o && !o.locked && o !== this.rewards.current ? (this.rewards.current && this.rewards.current.element.classList.remove("is-active"), this.rewards.current = o, this.rewards.current.element.classList.add("is-active"), this.sounds.paint.play(), this.events.trigger("rewardActiveChange", [
+                return o && !o.locked && o !== this.rewards.current ? (this.rewards.current && this.rewards.current.element?.classList.remove("is-active"), this.rewards.current = o, this.rewards.current.element?.classList.add("is-active"), this.sounds.paint.play(), this.events.trigger("rewardActiveChange", [
                     this.rewards.current
                 ]), localStorage.setItem("achievementsReward", o.name), !0) : !1;
             }, this.rewards.update = ()=>{
                 this.rewards.items.forEach((s)=>{
-                    this.globalProgress.achievedCount >= s.threshold ? s.locked && (s.locked = !1, s.element.classList.remove("is-locked"), s.element.classList.remove("has-tooltip")) : (s.locked || (s.locked = !0, s.element.classList.add("is-locked"), s.element.classList.add("has-tooltip"), s === this.rewards.current && this.rewards.set(this.rewards.default.name)), s.tooltipTextElement.textContent = s.threshold, s === this.rewards.current && this.rewards.set(this.rewards.default.name));
+                    this.globalProgress.achievedCount >= s.threshold ? s.locked && (s.locked = !1, s.element?.classList.remove("is-locked"), s.element?.classList.remove("has-tooltip")) : (s.locked || (s.locked = !0, s.element?.classList.add("is-locked"), s.element?.classList.add("has-tooltip"), s === this.rewards.current && this.rewards.set(this.rewards.default.name)), s.tooltipTextElement && (s.tooltipTextElement.textContent = s.threshold), s === this.rewards.current && this.rewards.set(this.rewards.default.name));
                 });
             };
         }
@@ -92934,15 +92241,15 @@ https://github.com/browserify/crypto-browserify`);
                 const o = r.progress instanceof Set ? r.progress.size : r.progress;
                 for (const a of r.items){
                     const c = Math.min(o, a.total);
-                    a.progressCurrentElement.textContent = c, a.barFillElement.style.transform = `scaleX(${c / a.total})`, !a.achieved && c === a.total && a.achieve(s);
+                    a.progressCurrentElement && (a.progressCurrentElement.textContent = c), a.barFillElement && (a.barFillElement.style.transform = `scaleX(${c / a.total})`), !a.achieved && c === a.total && a.achieve(s);
                 }
             }, r.reset = ()=>{
                 r.progress instanceof Set ? r.progress = new Set : r.progress = 0;
-                for (const s of r.items)s.progressCurrentElement.textContent = 0, s.barFillElement.style.transform = "scaleX(0)", s.achieved = !1, s.itemElement.classList.remove("is-achieved");
+                for (const s of r.items)s.progressCurrentElement && (s.progressCurrentElement.textContent = 0), s.barFillElement && (s.barFillElement.style.transform = "scaleX(0)"), s.achieved = !1, s.itemElement?.classList.remove("is-achieved");
             }, this.groups.set(e, r), r;
         }
         setItems() {
-            const e = this.menu.instance.contentElement.querySelector(".js-items");
+            const e = this.menu.instance?.contentElement.querySelector(".js-items") ?? null;
             for (const [r, s, o, a] of achievementsData){
                 const c = {
                     total: a,
@@ -92963,8 +92270,8 @@ https://github.com/browserify/crypto-browserify`);
                     <div class="fill"></div>
                 </div>
             `;
-                c.itemElement = document.createElement("div"), c.itemElement.classList.add("achievement"), c.itemElement.innerHTML = d, c.progressCurrentElement = c.itemElement.querySelector(".current"), c.barFillElement = c.itemElement.querySelector(".bar .fill"), e.append(c.itemElement), c.achieve = (p = !0)=>{
-                    if (c.achieved = !0, c.itemElement.classList.add("is-achieved"), !p) {
+                e && (c.itemElement = document.createElement("div"), c.itemElement.classList.add("achievement"), c.itemElement.innerHTML = d, c.progressCurrentElement = c.itemElement.querySelector(".current"), c.barFillElement = c.itemElement.querySelector(".bar .fill"), e.append(c.itemElement)), c.achieve = (p = !0)=>{
+                    if (c.achieved = !0, c.itemElement?.classList.add("is-achieved"), !p) {
                         this.globalProgress.update(), this.rewards.update(), this.game.world.confetti && (this.game.world.confetti.pop(this.game.player.position.clone()), this.game.world.confetti.pop(this.game.player.position.clone().add(new Vector3$1(1, -1, 1.5))), this.game.world.confetti.pop(this.game.player.position.clone().add(new Vector3$1(1, -1, -1.5)))), this.sounds.achieve.play();
                         const f = `
                         <div class="top">
@@ -92981,7 +92288,7 @@ https://github.com/browserify/crypto-browserify`);
                         </div>
                     `;
                         this.game.notifications.show(f, "achievement", 4, ()=>{
-                            this.game.inputs.interactiveButtons.clearItems(), this.game.menu.open("achievements");
+                            this.game.inputs.interactiveButtons.clearItems(), this.menu.instance && this.game.menu.open("achievements");
                         });
                     }
                 };
@@ -93006,6 +92313,7 @@ https://github.com/browserify/crypto-browserify`);
             });
         }
         setReset() {
+            if (!this.menu.instance) return;
             const e = this.menu.instance.contentElement.querySelector(".js-button-reset");
             let r = 0;
             e.addEventListener("click", (s)=>{
@@ -101217,38 +100525,6 @@ ${e.tab}if ( ${m} ) {
         setLocations() {
             this.locations = {}, this.locations.items = [
                 {
-                    name: "Achievements",
-                    respawnName: "achievements",
-                    offset: {
-                        x: 0,
-                        y: -.01
-                    }
-                },
-                {
-                    name: "Altar",
-                    respawnName: "altar",
-                    offset: {
-                        x: 0,
-                        y: -.05
-                    }
-                },
-                {
-                    name: "Behind<br /> the scene",
-                    respawnName: "behindTheScene",
-                    offset: {
-                        x: .01,
-                        y: 0
-                    }
-                },
-                {
-                    name: "Training<br />Bowling",
-                    respawnName: "bowling",
-                    offset: {
-                        x: -.08,
-                        y: .03
-                    }
-                },
-                {
                     name: "Home",
                     respawnName: "career",
                     offset: {
@@ -101265,34 +100541,10 @@ ${e.tab}if ( ${m} ) {
                     }
                 },
                 {
-                    name: "Cookie",
-                    respawnName: "cookie",
-                    offset: {
-                        x: -.02,
-                        y: -.01
-                    }
-                },
-                {
                     name: "Library",
                     respawnName: "lab",
                     offset: {
                         x: -.03,
-                        y: 0
-                    }
-                },
-                {
-                    name: "Landing",
-                    respawnName: "landing",
-                    offset: {
-                        x: .02,
-                        y: 0
-                    }
-                },
-                {
-                    name: "Time Machine",
-                    respawnName: "timeMachine",
-                    offset: {
-                        x: 0,
                         y: 0
                     }
                 }
@@ -101412,7 +100664,7 @@ ${e.tab}if ( ${m} ) {
                     }
                 ]
             ]), this.options = new Options, this.respawns = new Respawns("landing"), this.view = new View, this.rendering.setPostprocessing(), this.rendering.start(), this.reveal = new Reveal, this.noises = new Noises, this.weather = new Weather, this.wind = new Wind, this.tracks = new Tracks, this.lighting = new Lighting, this.fog = new Fog, this.water = new Water, this.materials = new Materials, this.objects = new Objects, this.explosions = new Explosions, this.world = new World;
-            const a = __vitePreload(()=>import("./rapier-QrfCTZ4H.js").then(async (m)=>{
+            const a = __vitePreload(()=>import("./rapier-BIzymrAk.js").then(async (m)=>{
                     await m.__tla;
                     return m;
                 }), [], import.meta.url), c = this.resourcesLoader.load([
@@ -101640,7 +100892,7 @@ ${e.tab}if ( ${m} ) {
         }
         reset() {
             this.inputs.interactiveButtons.clearItems(), this.player.respawn(null, ()=>{
-                this.objects.resetAll(), this.world.explosiveCrates && this.world.explosiveCrates.reset(), this.world.areas.bowling && this.world.areas.bowling.restart(), this.world.areas.cookie && (this.world.areas.cookie.cookies.instancedGroup.needsUpdate = !0), this.world.areas.toilet && (this.world.areas.toilet.cabin.down = !1), this.world.areas.social && (this.world.areas.social.statue.down = !1, this.world.areas.social.fans.instancedGroup.needsUpdate = !0), this.world.benches && (this.world.benches.instancedGroup.needsUpdate = !0), this.world.fences && (this.world.fences.instancedGroup.needsUpdate = !0), this.world.bricks && (this.world.bricks.instancedGroup.needsUpdate = !0), this.world.lanterns && (this.world.lanterns.instancedGroup.needsUpdate = !0), gsapWithCSS.delayedCall(2, ()=>{
+                this.objects.resetAll(), this.world.explosiveCrates && this.world.explosiveCrates.reset(), this.world.areas.bowling && this.world.areas.bowling.restart(), this.world.areas.cookie?.cookies && (this.world.areas.cookie.cookies.instancedGroup.needsUpdate = !0), this.world.areas.toilet?.cabin && (this.world.areas.toilet.cabin.down = !1), this.world.areas.social?.statue && this.world.areas.social?.fans && (this.world.areas.social.statue.down = !1, this.world.areas.social.fans.instancedGroup.needsUpdate = !0), this.world.benches && (this.world.benches.instancedGroup.needsUpdate = !0), this.world.fences && (this.world.fences.instancedGroup.needsUpdate = !0), this.world.bricks && (this.world.bricks.instancedGroup.needsUpdate = !0), this.world.lanterns && (this.world.lanterns.instancedGroup.needsUpdate = !0), gsapWithCSS.delayedCall(2, ()=>{
                     this.achievements.setProgress("reset", 1);
                 });
             });

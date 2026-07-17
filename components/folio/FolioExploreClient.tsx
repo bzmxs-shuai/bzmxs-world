@@ -33,6 +33,26 @@ type RuntimeCommand = {
   type: "folio:pause" | "folio:resume" | "folio:respawn";
 };
 
+type BridgeLogEntry = {
+  direction: "in" | "out";
+  type?: BridgeMessage["type"] | RuntimeCommand["type"];
+  currentArea?: string | null;
+  officialArea?: string | null;
+  timestamp: number;
+};
+
+const allowedAreas = new Set<BuildingId>(["library", "training-ground", "home"]);
+
+function isAllowedArea(area: unknown): area is BuildingId {
+  return typeof area === "string" && allowedAreas.has(area as BuildingId);
+}
+
+function recordBridgeEvent(entry: BridgeLogEntry) {
+  const target = window as typeof window & { __bzmxsBridgeEvents?: BridgeLogEntry[] };
+  target.__bzmxsBridgeEvents = target.__bzmxsBridgeEvents ?? [];
+  target.__bzmxsBridgeEvents.push(entry);
+}
+
 const areaText: Record<BuildingId, { title: string; subtitle: string; icon: typeof BookOpen }> = {
   library: {
     title: "LIBRARY",
@@ -77,6 +97,7 @@ export function FolioExploreClient({ posts }: { posts: Post[] }) {
       return;
     }
 
+    recordBridgeEvent({ direction: "out", type, timestamp: Date.now() });
     target.postMessage({ source: "bzmxs-next", type } satisfies RuntimeCommand, window.location.origin);
   }, []);
 
@@ -107,6 +128,14 @@ export function FolioExploreClient({ posts }: { posts: Post[] }) {
         return;
       }
 
+      recordBridgeEvent({
+        direction: "in",
+        type: event.data.type,
+        currentArea: event.data.currentArea ?? null,
+        officialArea: event.data.officialArea ?? null,
+        timestamp: Date.now(),
+      });
+
       if (event.data.type === "folio:error") {
         const location = event.data.filename ? ` (${event.data.filename}:${event.data.lineno ?? "?"})` : "";
         setRuntimeError(`${event.data.message ?? "Unknown folio runtime error"}${location}`);
@@ -122,7 +151,7 @@ export function FolioExploreClient({ posts }: { posts: Post[] }) {
       }
 
       if (event.data.type === "folio:state" || event.data.type === "folio:ready" || event.data.type === "folio:zone-enter") {
-        const area = event.data.currentArea ?? null;
+        const area = isAllowedArea(event.data.currentArea) ? event.data.currentArea : null;
         setCurrentArea(area);
         setOfficialArea(event.data.officialArea ?? null);
         setStoreArea(area ?? "central");
@@ -134,7 +163,7 @@ export function FolioExploreClient({ posts }: { posts: Post[] }) {
         setStoreArea("central");
       }
 
-      if (event.data.type === "folio:open-content" && event.data.currentArea) {
+      if (event.data.type === "folio:open-content" && isAllowedArea(event.data.currentArea)) {
         openPanel(event.data.currentArea);
       }
     };
