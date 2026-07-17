@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import * as THREE from "three";
 
 const requiredChecks = [
@@ -12,6 +12,18 @@ const requiredChecks = [
   { id: "pushables", label: "Pushables", resource: "brickBase", getObject: (app) => app?.world?.walls?.container ?? app?.world?.objects?.container },
   { id: "full", label: "Full Scene", resource: "crossroadsStaticBase", getObject: (app) => app?.world?.container },
 ];
+
+const focusPresets = {
+  "library-far": { x: 22, y: -24, z: 1, zoom: 0.66 },
+  "library-entry": { x: 28, y: -27, z: 1, zoom: 0.38 },
+  "library-detail": { x: 31, y: -31, z: 1, zoom: 0.24 },
+  "home-far": { x: 1, y: -43, z: 1, zoom: 0.62 },
+  "home-porch": { x: 1, y: -51, z: 1, zoom: 0.36 },
+  "home-detail": { x: -1, y: -54, z: 1, zoom: 0.24 },
+  "training-route": { x: -45, y: -24, z: 1, zoom: 0.68 },
+  "training-devices": { x: -47, y: -31, z: 1, zoom: 0.42 },
+  "training-start": { x: -39, y: -24, z: 1, zoom: 0.36 },
+};
 
 function describeObject(object) {
   if (!object) {
@@ -43,11 +55,28 @@ function describeObject(object) {
 export function FolioDebugOverlay() {
   const [rows, setRows] = useState([]);
   const [summary, setSummary] = useState({ started: false, resources: 0, failures: 0 });
+  const cleanMode = useSyncExternalStore(
+    () => () => {},
+    () => new URLSearchParams(window.location.search).has("clean"),
+    () => false,
+  );
 
   useEffect(() => {
     const timer = window.setInterval(() => {
       const app = window.__BZMX_FOLIO_APP;
       const resources = app?.resources;
+      const focus = new URLSearchParams(window.location.search).get("focus");
+      const preset = focusPresets[focus];
+      const shouldAutoStart = Boolean(preset) || window.location.search.includes("overview=1");
+
+      const resourcesReady = Boolean(
+        resources?.loader?.toLoad && resources.loader.loaded === resources.loader.toLoad && !resources.fatalFailure,
+      );
+
+      if (shouldAutoStart && app?.world && !app.world.car && resourcesReady) {
+        app.world.start();
+        window.__BZMX_DEBUG_AUTOSTARTED = true;
+      }
 
       if (window.location.search.includes("overview=1") && app?.world?.car && app?.camera) {
         app.camera.instance.far = 220;
@@ -58,6 +87,17 @@ export function FolioDebugOverlay() {
         app.camera.zoom.minDistance = 62;
         app.camera.zoom.amplitude = 0;
         app.camera.zoom.distance = 62;
+      }
+
+      if (preset && app?.world?.car && app?.world?.physics?.car?.chassis?.body && app?.camera) {
+        const body = app.world.physics.car.chassis.body;
+        body.position.set(preset.x, preset.y, preset.z);
+        body.velocity.set(0, 0, 0);
+        body.angularVelocity.set(0, 0, 0);
+        body.wakeUp();
+        app.camera.zoom.targetValue = preset.zoom;
+        app.camera.zoom.value = preset.zoom;
+        app.camera.pan.reset();
       }
 
       setSummary({
@@ -83,7 +123,9 @@ export function FolioDebugOverlay() {
   }, []);
 
   return (
-    <aside className="pointer-events-none fixed bottom-4 right-4 z-40 max-h-[52vh] w-[430px] overflow-auto rounded-md border border-amber-100/30 bg-stone-950/84 p-3 text-xs text-amber-50 shadow-xl backdrop-blur">
+    <aside
+      className={`pointer-events-none fixed bottom-4 right-4 z-40 max-h-[52vh] w-[430px] overflow-auto rounded-md border border-amber-100/30 bg-stone-950/84 p-3 text-xs text-amber-50 shadow-xl backdrop-blur ${cleanMode ? "hidden" : ""}`}
+    >
       <div className="mb-2 flex items-center justify-between gap-3">
         <h2 className="font-semibold">Explore Debug</h2>
         <span className="text-amber-100/80">{summary.started ? "World started" : "Press Enter on START"}</span>

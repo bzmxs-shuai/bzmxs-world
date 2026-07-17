@@ -67,7 +67,14 @@ export function FolioWorld({ posts }) {
       setLoadError(failure);
     });
 
+    const readyFallbackTimer = window.setTimeout(() => {
+      if (!app.resources.fatalFailure && app.resources.loader.loaded === app.resources.loader.toLoad) {
+        setIsBooting(false);
+      }
+    }, 1200);
+
     return () => {
+      window.clearTimeout(readyFallbackTimer);
       window.__BZMX_FOLIO_PAUSED = false;
       if (window.__BZMX_FOLIO_APP === app) {
         delete window.__BZMX_FOLIO_APP;
