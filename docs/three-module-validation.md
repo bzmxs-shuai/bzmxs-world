@@ -2,6 +2,10 @@
 
 Date: 2026-07-17
 
+Preview URL:
+
+`https://bzmxs-world-qixp0c2qv-xiaoshuai00518-5281s-projects.vercel.app`
+
 Scope: `/explore` exposes only three interactive and enterable blog modules:
 
 - Library
@@ -22,7 +26,7 @@ Other official scene areas may remain as non-interactive environmental assets. T
 
 ## Bridge Event Validation
 
-Recorded bridge events from the production local validation:
+Recorded bridge events from the Vercel Preview validation:
 
 | Event | Area |
 |---|---|
@@ -56,11 +60,12 @@ Console result:
 - No sustained `error` entries were recorded.
 - No MutationObserver `error` entries were recorded.
 - No MutationObserver warning was recorded in this validation run.
-- Recorded warnings were WebGPU/WebGL fallback or preload timing warnings.
+- Recorded warnings were WebGPU/WebGL fallback, GPU readback performance, or preload timing warnings.
 
 Network result:
 
-- Request failures: `0`.
+- Core project resource failures: `0`.
+- One non-core Vercel Live feedback script request ended with `net::ERR_ABORTED`.
 
 ## Admin Scope
 
@@ -70,9 +75,9 @@ Network result:
 
 ## Evidence
 
-Latest validation video:
+Latest Preview validation video:
 
-`artifacts/validation/page@26058dfee220d70ce04383ac6d696524.webm`
+`artifacts/validation/page@7406299180ee6d5371b870c08519e886.webm`
 
 Screenshots:
 
