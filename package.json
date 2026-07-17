@@ -8,13 +8,19 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
+    "test": "tsc --noEmit --pretty false",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "admin:create": "tsx scripts/admin-create.ts",
     "format": "prettier --write ."
   },
   "dependencies": {
     "@mdx-js/react": "^3.1.1",
+    "@prisma/client": "^6.19.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "@react-three/rapier": "^2.2.0",
+    "bcryptjs": "^3.0.3",
     "cannon": "^0.6.2",
     "dat.gui": "^0.7.9",
     "framer-motion": "^12.23.24",
@@ -40,7 +46,9 @@
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.2.10",
     "prettier": "^3.7.4",
+    "prisma": "^6.19.0",
     "tailwindcss": "^4.1.18",
+    "tsx": "^4.23.1",
     "typescript": "^5.9.3"
   }
 }

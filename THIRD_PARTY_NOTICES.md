@@ -1,5 +1,23 @@
 # Third Party Notices
 
+## Bruno Simon folio-2025
+
+- Official public site source path: <https://bruno-simon.com/> → Behind the scene → Source code
+- Source: https://github.com/brunosimon/folio-2025
+- Audited commit: `41046b57eeed8d156d9c3fd7fa259900baef7816`
+- License: MIT License
+- Copyright: Copyright (c) 2025 Bruno Simon
+- Preserved license file: `LICENSE.folio-2025.md`
+
+The `folio-2025` repository is the official source for Bruno Simon's newer public portfolio. It contains the Blender source file `resources/folio-2025.blend`, runtime code under `sources/Game/`, and public runtime assets under `static/`.
+
+Important notes:
+
+- The public README states that server code is not shared, while the portfolio works without it.
+- Music files under `static/sounds/musics/` include a CC0 1.0 Universal license file.
+- Any adoption into this project must remove or replace Bruno Simon personal identity, original customer/project content, Three.js Journey promotions, private server/ranking/whisper behavior, analytics, and unverified third-party content.
+- This notice records the official source audit. It does not imply every `folio-2025` asset has already been integrated into the active runtime.
+
 ## Bruno Simon folio-2019
 
 - Source: https://github.com/brunosimon/folio-2019
