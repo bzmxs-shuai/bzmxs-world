@@ -4,7 +4,7 @@ Date: 2026-07-17
 
 Preview URL:
 
-`https://bzmxs-world-qixp0c2qv-xiaoshuai00518-5281s-projects.vercel.app`
+`https://bzmxs-world-5621nyb4b-xiaoshuai00518-5281s-projects.vercel.app`
 
 Scope: `/explore` exposes only three interactive and enterable blog modules:
 
@@ -77,7 +77,7 @@ Network result:
 
 Latest Preview validation video:
 
-`artifacts/validation/page@7406299180ee6d5371b870c08519e886.webm`
+`artifacts/validation/page@e6d5aaed554c8fbff10e186c327a6ff9.webm`
 
 Screenshots:
 
