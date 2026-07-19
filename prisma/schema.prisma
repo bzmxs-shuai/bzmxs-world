@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PostArea {
+  library
+  training_ground @map("training-ground")
+  home
+}
+
+enum PostStatus {
+  draft
+  published
+  scheduled
+  trash
+}
+
+enum ContentFormat {
+  markdown
+  mdx
+  html
+}
+
+model User {
+  id           String    @id @default(cuid())
+  username     String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  sessions     Session[]
+  posts        Post[]
+  auditLogs    AuditLog[]
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   @unique
+  userAgent  String?
+  ipAddress  String?
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  posts       Post[]
+}
+
+model Tag {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  posts       PostTag[]
+}
+
+model Post {
+  id             String        @id @default(cuid())
+  title          String
+  slug           String        @unique
+  excerpt        String?
+  content        String
+  contentFormat  ContentFormat @default(markdown)
+  area           PostArea
+  status         PostStatus    @default(draft)
+  coverImageId   String?
+  publishedAt    DateTime?
+  scheduledAt    DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  legacyUrl      String?
+  seoTitle       String?
+  seoDescription String?
+  isPinned       Boolean       @default(false)
+  deletedAt      DateTime?
+  authorId       String
+  categoryId     String?
+
+  author     User       @relation(fields: [authorId], references: [id])
+  category   Category?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  coverImage Media?     @relation(fields: [coverImageId], references: [id], onDelete: SetNull)
+  tags       PostTag[]
+
+  @@index([area, status])
+  @@index([publishedAt])
+  @@index([scheduledAt])
+}
+
+model PostTag {
+  postId String
+  tagId  String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+}
+
+model Media {
+  id          String   @id @default(cuid())
+  url         String
+  storageKey  String   @unique
+  fileName    String
+  mimeType    String
+  sizeBytes   Int
+  width       Int?
+  height      Int?
+  altText     String?
+  title       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  posts       Post[]
+}
+
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  username  String
+  ipAddress String?
+  userAgent String?
+  success   Boolean
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@index([username, createdAt])
+  @@index([ipAddress, createdAt])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  entityType String?
+  entityId   String?
+  ipAddress  String?
+  userAgent  String?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+}

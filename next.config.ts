@@ -3,6 +3,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   pageExtensions: ["ts", "tsx", "md", "mdx"],
   webpack: (config, { dev }) => {
+    config.module.rules.push({
+      test: /\.(glsl|vs|fs|vert|frag)$/,
+      use: [require.resolve("./scripts/glsl-include-loader.cjs")],
+    });
+
     if (dev) {
       config.watchOptions = {
         ...config.watchOptions,

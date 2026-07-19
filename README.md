@@ -1,38 +1,37 @@
 # bzmxs-world
 
-A warm low-poly 3D personal blog with an explorable world, built with Next.js and React Three Fiber.
+A warm low-poly 3D personal blog with an explorable driving world, built with Next.js and based on Bruno Simon's open-source `folio-2025` runtime.
 
 ## Screenshot
 
-Screenshot placeholder: add a desktop capture of the central island after the visual direction is finalized.
+Screenshot placeholder: add a desktop capture from the Vercel Preview after visual QA.
 
 ## Features
 
-- Low-poly 3D island with a central plaza, Library, Training Ground, and Home areas.
-- Temporary small car character with WASD and arrow-key movement.
-- Smooth third-person follow camera.
-- Basic ground and building collisions with React Three Rapier.
-- Building proximity detection with keyboard and click interaction prompts.
-- Two-dimensional article panel for area-specific content.
-- Normal reading mode that does not load the 3D scene.
-- MDX-based posts with area, category, and tag metadata.
-- Static article detail pages that can be refreshed directly.
-- Basic mobile virtual direction controls.
-- Loading screen, WebGL fallback, and app-level error boundary.
+- 3D exploration mode based on the `folio-2025` Three.js driving runtime.
+- Original car physics, third-person camera, collisions, pushable objects, loading flow, mobile controls, and sound framework retained from the open-source base.
+- Blog-specific central spawn, Library, Training Ground, and Home content entry points.
+- `E` / `Enter` / mouse click area interactions that open a 2D article panel.
+- Normal reading mode that does not depend on the 3D runtime.
+- MDX posts with area, category, tags, SEO metadata, and static article detail routes.
+- WebGL fallback, quality selector, mute control, and respawn control.
 
 ## Tech Stack
 
 - Next.js App Router
 - TypeScript
 - Tailwind CSS
-- React Three Fiber
-- Drei
-- React Three Rapier
 - Zustand
 - Framer Motion
 - MDX
+- Three.js
+- Cannon.js
+- GSAP
+- Howler.js
 - ESLint
 - Prettier
+
+The previous MVP dependencies for React Three Fiber, Drei, and React Three Rapier are still present while the rebuild branch is being evaluated, but the active `/explore` runtime now uses the original Three.js architecture from `folio-2025`.
 
 ## Installation
 
@@ -40,7 +39,7 @@ Screenshot placeholder: add a desktop capture of the central island after the vi
 npm install
 ```
 
-This project was initially validated in an environment that used `pnpm`, so `pnpm install` also works.
+This workspace has also been validated with `pnpm`.
 
 ## Development
 
@@ -48,7 +47,7 @@ This project was initially validated in an environment that used `pnpm`, so `pnp
 npm run dev
 ```
 
-Open `http://localhost:3000` after the development server starts.
+Open `http://localhost:3000`.
 
 ## Build
 
@@ -60,35 +59,46 @@ npm run build
 
 ## Controls
 
-- `W` / `A` / `S` / `D`: move the vehicle.
-- Arrow keys: move the vehicle.
-- `E`: open the nearby building content panel.
-- Click the interaction prompt: open the nearby building content panel.
-- Mobile: use the virtual direction buttons in the lower-left corner.
+- `W` / `A` / `S` / `D` or arrow keys: drive.
+- `Shift`: boost.
+- `Space` / `Ctrl`: brake.
+- `R`: respawn.
+- `E` / `Enter`: open the current blog area.
+- `M`: mute / unmute through the original runtime shortcut; the HUD also includes a mute button.
+- Mobile: touch controls are provided by the original runtime.
 
 ## Directory Structure
 
 ```text
-app/                 Next.js routes, layout, error and not-found pages
-components/world/    3D world, player, camera, island, buildings, interaction zones
-components/interface/2D interface, navigation, article panel, map, loading and mobile controls
-components/blog/     Article cards, article list, and MDX content wrapper
-components/fallback/ WebGL fallback UI
-content/posts/       MDX sample posts
-lib/                 Post loading and MDX rendering helpers
-store/               Zustand world state
-public/              Static assets
+app/                  Next.js routes, layout, error and not-found pages
+components/folio/     Next.js bridge for the folio-2025 runtime
+components/interface/ 2D article panel, loading UI, navigation helpers
+components/blog/      Article cards, article list, and MDX content wrapper
+content/posts/        MDX sample posts
+lib/folio-runtime/    Previous folio-2019 runtime kept for comparison during review
+lib/shaders/          Previous folio-2019 GLSL shaders kept for comparison during review
+lib/images/           Previous folio-2019 mobile control UI images kept for comparison during review
+lib/                  Post loading and MDX rendering helpers
+public/folio-2025/    Active optimized folio-2025 static runtime assets
+store/                Zustand world state
+docs/                 Reference comparison notes
 ```
 
 ## Current Status
 
-This is a reliable MVP for the first phase. It focuses on a maintainable 3D exploration shell, a working MDX content system, and a separate normal reading mode. The current 3D models are intentionally built from simple geometry and do not use large external assets.
+This branch is a folio-base rebuild preview. The stable public version remains on `main`; this branch should be reviewed through a Pull Request and Vercel Preview before merging.
 
 ## Roadmap
 
-- Add search, category filters, and archive pages.
-- Improve mobile exploration and camera controls.
-- Replace sample MDX files with real blog content.
-- Add polished visual assets and screenshots.
-- Add optional map markers and direct area navigation.
-- Prepare a later migration workflow for old blog posts without touching the old server.
+- Replace temporary canvas-text area signs with polished low-poly text/model assets.
+- Further reduce unused legacy dependencies after the folio-base direction is approved.
+- Add a richer article search/filter UI to normal reading mode.
+- Add screenshot assets and final production QA notes before binding any custom domain.
+
+## Credits
+
+Built upon the open-source `folio-2025` project by Bruno Simon. The original project is licensed under the MIT License. Modifications include the bzmxs.cn blog content system, optimized static runtime assets, Chinese-facing shell UI, content-area bridge, and personal branding.
+
+The active 3D runtime is built from the official newer portfolio source [brunosimon/folio-2025](https://github.com/brunosimon/folio-2025), linked from bruno-simon.com → Behind the scene → Source code. The audited repository is MIT licensed and includes Blender/source assets; see [LICENSE.folio-2025.md](./LICENSE.folio-2025.md), [docs/new-portfolio-source-audit.md](./docs/new-portfolio-source-audit.md), and [docs/folio-2025-integration-decision.md](./docs/folio-2025-integration-decision.md).
+
+See [LICENSE.folio-2019.md](./LICENSE.folio-2019.md), [LICENSE.folio-2025.md](./LICENSE.folio-2025.md), and [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) for license and attribution details.

@@ -6,6 +6,7 @@ dist/
 *.tsbuildinfo
 work/
 outputs/
+artifacts/
 
 # logs
 *.log
@@ -16,6 +17,7 @@ pnpm-debug.log*
 
 # caches
 .cache/
+.pnpm-store/
 .turbo/
 .vercel/
 .vercel
