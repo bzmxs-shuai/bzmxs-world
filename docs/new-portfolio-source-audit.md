@@ -72,6 +72,6 @@ The public site states that the source code is available on GitHub under the MIT
 
 ## Integration Risk Notes
 
-- `folio-2025` is not a drop-in replacement for the current `folio-2019` bridge. It uses Vite, Rapier, Three.js r183, TSL/WebGPU-adjacent rendering, a different game loop, and a different static resource layout.
+- `folio-2025` is not a drop-in replacement for a custom React or older Three.js bridge. It uses Vite, Rapier, Three.js r183, TSL/WebGPU-adjacent rendering, a different game loop, and a different static resource layout.
 - A safe integration should first run the official repository unchanged, then wrap it as a separate client-only `/explore` runtime or embed its built output behind a Next.js bridge.
 - This audit does not claim that the official 2025 runtime has already been integrated into this repository.

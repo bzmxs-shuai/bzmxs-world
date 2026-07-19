@@ -24,14 +24,10 @@ Screenshot placeholder: add a desktop capture from the Vercel Preview after visu
 - Zustand
 - Framer Motion
 - MDX
-- Three.js
-- Cannon.js
-- GSAP
-- Howler.js
 - ESLint
 - Prettier
 
-The previous MVP dependencies for React Three Fiber, Drei, and React Three Rapier are still present while the rebuild branch is being evaluated, but the active `/explore` runtime now uses the original Three.js architecture from `folio-2025`.
+The active `/explore` experience is served from an optimized static build of the official `folio-2025` runtime under `public/folio-2025`. Next.js owns the blog routes and the bridge UI.
 
 ## Installation
 
@@ -75,23 +71,18 @@ components/folio/     Next.js bridge for the folio-2025 runtime
 components/interface/ 2D article panel, loading UI, navigation helpers
 components/blog/      Article cards, article list, and MDX content wrapper
 content/posts/        MDX sample posts
-lib/folio-runtime/    Previous folio-2019 runtime kept for comparison during review
-lib/shaders/          Previous folio-2019 GLSL shaders kept for comparison during review
-lib/images/           Previous folio-2019 mobile control UI images kept for comparison during review
 lib/                  Post loading and MDX rendering helpers
 public/folio-2025/    Active optimized folio-2025 static runtime assets
 store/                Zustand world state
-docs/                 Reference comparison notes
+docs/                 folio-2025 source, asset, and validation notes
 ```
 
 ## Current Status
 
-This branch is a folio-base rebuild preview. The stable public version remains on `main`; this branch should be reviewed through a Pull Request and Vercel Preview before merging.
+The final folio-2025 based MVP is on `main`. `/explore` exposes only Library, Training Ground, and Home as interactive blog modules.
 
 ## Roadmap
 
-- Replace temporary canvas-text area signs with polished low-poly text/model assets.
-- Further reduce unused legacy dependencies after the folio-base direction is approved.
 - Add a richer article search/filter UI to normal reading mode.
 - Add screenshot assets and final production QA notes before binding any custom domain.
 
@@ -99,6 +90,6 @@ This branch is a folio-base rebuild preview. The stable public version remains o
 
 Built upon the open-source `folio-2025` project by Bruno Simon. The original project is licensed under the MIT License. Modifications include the bzmxs.cn blog content system, optimized static runtime assets, Chinese-facing shell UI, content-area bridge, and personal branding.
 
-The active 3D runtime is built from the official newer portfolio source [brunosimon/folio-2025](https://github.com/brunosimon/folio-2025), linked from bruno-simon.com → Behind the scene → Source code. The audited repository is MIT licensed and includes Blender/source assets; see [LICENSE.folio-2025.md](./LICENSE.folio-2025.md), [docs/new-portfolio-source-audit.md](./docs/new-portfolio-source-audit.md), and [docs/folio-2025-integration-decision.md](./docs/folio-2025-integration-decision.md).
+The active 3D runtime is built from the official newer portfolio source [brunosimon/folio-2025](https://github.com/brunosimon/folio-2025), linked from bruno-simon.com -> Behind the scene -> Source code. The audited repository is MIT licensed and includes Blender/source assets; see [LICENSE.folio-2025.md](./LICENSE.folio-2025.md), [docs/new-portfolio-source-audit.md](./docs/new-portfolio-source-audit.md), and [docs/folio-2025-integration-decision.md](./docs/folio-2025-integration-decision.md).
 
-See [LICENSE.folio-2019.md](./LICENSE.folio-2019.md), [LICENSE.folio-2025.md](./LICENSE.folio-2025.md), and [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) for license and attribution details.
+See [LICENSE.folio-2025.md](./LICENSE.folio-2025.md) and [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) for license and attribution details.
